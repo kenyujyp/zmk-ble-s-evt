@@ -19,4 +19,5 @@
 #
 ---
 include:
-  - board: nice60
+  - board: nice_nano_v2
+    cmake-args: -DZMK_EXTRA_MODULES="${GITHUB_WORKSPACE}/config/nice_nano_v2_drivers/"

@@ -1,0 +1,6 @@
+name: nice_nano_v2_drivers
+build:
+  depends:
+    - module
+  cmake: .
+  kconfig: Kconfig
