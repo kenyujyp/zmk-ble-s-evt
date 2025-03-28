@@ -1,0 +1,10 @@
+// For nRF52840 MCU (e.g., Nice!Nano v2)
+CONFIG_SOC_PART_NUMBER_NRF52840=y
+
+if SHIELD_EC60BLE
+
+# Name must be less than 16 characters long!
+config ZMK_KEYBOARD_NAME
+    default "EC60BLE"
+
+endif

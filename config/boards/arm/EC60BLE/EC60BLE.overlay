@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2023 ssbb
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include "EC60BLE.dtsi.c"
+
+/ {
+  chosen {
+    zmk,kscan = &kscan;
+  };
+
+  /* &gpio0 13 -> P0.13  (ROW 0)*/
+  /* &gpio0 24 -> P0.24  (ROW 1)*/
+  /* &gpio0 3 -> P0.03  (ROW 2)*/
+  /* &gpio1 10 -> P1.10  (ROW 3)*/
+  /* &gpio1 11 -> P1.11  (ROW 4)*/
+  kscan: kscan {
+    compatible = "zmk,kscan-gpio-ec";
+    label = "KSCAN";
+    row-gpios
+    = <&gpio0 13 GPIO_ACTIVE_HIGH>
+    , <&gpio0 24 GPIO_ACTIVE_HIGH>
+    , <&gpio0 3 GPIO_ACTIVE_HIGH>
+    , <&gpio1 10 GPIO_ACTIVE_HIGH>
+    , <&gpio1 11 GPIO_ACTIVE_HIGH>
+    ;
+
+    mux-sel-gpios
+    = <&gpio0 5 GPIO_ACTIVE_HIGH>
+    , <&gpio0 30 GPIO_ACTIVE_HIGH>
+    , <&gpio0 31 GPIO_ACTIVE_HIGH>
+    ;
+
+    mux-en-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+    discharge-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+    col-channels = <0 1 2 3 4 5 6 7 8 9 10 11 12 13 14>;
+    io-channels = <&adc 1>;
+    power-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+  };
+};
+
+&adc {
+  #address-cells = <1>;
+  #size-cells = <0>;
+  status = "okay";
+
+  // EC Read
+  channel@1 {
+    reg = <1>;
+    zephyr,gain = "ADC_GAIN_1_6";
+    zephyr,reference = "ADC_REF_INTERNAL";
+    zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
+    zephyr,resolution = <12>;
+    zephyr,input-positive = <NRF_SAADC_AIN4>; /* P0.28 */
+  };
+
+  // Battery Sensing
+  channel@3 {
+    reg = <3>;
+    zephyr,gain = "ADC_GAIN_1_6";
+    zephyr,reference = "ADC_REF_INTERNAL";
+    zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
+    zephyr,resolution = <12>;
+    zephyr,input-positive = <NRF_SAADC_AIN5>; /* P0.29 */
+  };
+};

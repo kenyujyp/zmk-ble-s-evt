@@ -19,6 +19,6 @@
 #
 ---
 include:
-  - board: nice_nano_v2
-    cmake-args: -DZMK_EXTRA_MODULES="${GITHUB_WORKSPACE}/config/nice_nano_v2_drivers/"
-    shield: nice_nano_v2
+  - board: EC60BLE
+    cmake-args: -DZMK_EXTRA_MODULES="${GITHUB_WORKSPACE}/config/EC60BLE_drivers/"
+    snippet: enable_ec_calibrator

@@ -1,4 +1,4 @@
-name: nice_nano_v2_drivers
+name: EC60BLE_drivers
 build:
   depends:
     - module

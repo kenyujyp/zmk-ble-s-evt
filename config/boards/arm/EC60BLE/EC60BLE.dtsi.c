@@ -2,6 +2,7 @@
  * Copyright (c) 2023 Sviatoslav Bulbakha
  *
  * SPDX-License-Identifier: MIT
+ * defines matrix transform to be included in overlay file
  */
 
 #include <dt-bindings/zmk/matrix_transform.h>
