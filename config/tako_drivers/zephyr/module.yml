@@ -1,4 +1,4 @@
-name: ec60ble_drivers
+name: tako_drivers
 build:
   depends:
     - module

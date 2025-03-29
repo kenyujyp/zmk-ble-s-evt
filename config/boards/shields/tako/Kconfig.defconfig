@@ -1,7 +1,7 @@
-if SHIELD_ec60ble
+if SHIELD_TAKO_LEFT
 
 config ZMK_KEYBOARD_NAME
-  default "ec60ble"
+  default "SSY34"
 
 endif
 
