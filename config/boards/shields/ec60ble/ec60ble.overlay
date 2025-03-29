@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "EC60BLE.dtsi.c"
+#include "ec60ble.dtsi"
 
 / {
   chosen {
@@ -53,7 +53,7 @@
     zephyr,reference = "ADC_REF_INTERNAL";
     zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
     zephyr,resolution = <12>;
-    zephyr,input-positive = <NRF_SAADC_AIN4>; /* P0.28 */
+    zephyr,input-positive = <NRF_SAADC_AIN4>; /* P0.28  or VCC pin!? */
   };
 
   // Battery Sensing
@@ -66,3 +66,4 @@
     zephyr,input-positive = <NRF_SAADC_AIN5>; /* P0.29 */
   };
 };
+

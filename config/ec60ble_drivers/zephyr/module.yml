@@ -1,4 +1,4 @@
-name: EC60BLE_drivers
+name: ec60ble_drivers
 build:
   depends:
     - module

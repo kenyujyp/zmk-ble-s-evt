@@ -1,2 +1,0 @@
-config SHIELD_EC60BLE
-  def_bool $(shields_list_contains,EC60BLE)
