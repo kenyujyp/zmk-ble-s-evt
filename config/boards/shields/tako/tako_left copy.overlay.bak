@@ -40,6 +40,30 @@
     discharge-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
     io-channels = <&adc 1>;
     power-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+    /*
+    // Define columns via GPIO multiplexers
+    mux-controllers {
+      compatible = "zmk,gpio-mux";
+      #address-cells = <1>;
+      #size-cells = <0>;
+
+      // First multiplexer (controls columns 0-7)
+      mux0: mux@0 {
+        compatible = "zmk,gpio-mux";
+        gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>; // Mux enable or disable pin 1 (e.g., GPIO0_03)
+        #address-cells = <1>;
+        #size-cells = <0>;
+      };
+
+      // Second multiplexer (controls columns 8-14)
+      mux1: mux@1 {
+        compatible = "zmk,gpio-mux";
+        gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>; // Mux enable or disable pin 2 (e.g., GPIO0_04)
+        #address-cells = <1>;
+        #size-cells = <0>;
+      };
+    };
+    */
 
     // Map columns to mux channels (0 = mux0, 1 = mux1)
     col-channels = <0 3 1 2 5 6 7 4 0 3 1 2 5 7 6>; // Columns 0-7 use mux0, corresponding to physical pins, columns 8-14 use mux1
