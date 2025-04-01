@@ -66,7 +66,7 @@
 
     // Map columns to mux channels (0 = mux0, 1 = mux1)
     col-channels = <0 3 1 2 5 6 7 4 0 3 1 2 5 7 6>; // Columns 0-7 use mux0, corresponding to physical pins, columns 8-14 use mux1
-
+  };
 };
 
 &adc {
