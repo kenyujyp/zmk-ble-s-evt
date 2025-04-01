@@ -35,7 +35,7 @@ properties:
     default: 30
   sleep-poll-period-ms:
     type: int
-    default: 3000
+    default: 3000000
   muxes:
     type: phandle-array
   power-gpios:
