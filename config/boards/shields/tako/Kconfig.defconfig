@@ -2,7 +2,6 @@ if SHIELD_TAKO_LEFT
 
 config ZMK_KEYBOARD_NAME
   default "ec60ble"
-
 endif
 
 
