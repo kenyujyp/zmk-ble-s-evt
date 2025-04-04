@@ -8,12 +8,8 @@
 #include <physical_layouts.dtsi>
 
 / {
-  chosen {
-    zmk,kscan = <&kscan0>;
-    zmk,physical_layouts = &physical_layout0;
-  };
 
-  physical_layout0: physical_layout_0 {
+  default_layout: default_layout {
     compatible = "zmk,physical-layout";
     display-name = "LAYOUT";
 
@@ -88,6 +84,8 @@
         , <&key_physical_attrs 100 100 1400  400       0     0     0>
         ;
   };
+
+  /* alt_layout: alt_layout {};  for alternative layout */
 };
 
 &i2c0 {
@@ -96,14 +94,4 @@
 
 &i2c1 {
   status = "disabled";
-};
-
-&physical_layout0{
-	transform = <&default_transform>;
-	kscan = <&kscan0>;
-};
-
-zephyr_udc0: &usbd { 
-    compatible = "nordic,nrf-usbd"; 
-    status = "okay"; 
 };
