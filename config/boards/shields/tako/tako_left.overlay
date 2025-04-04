@@ -53,13 +53,13 @@
     wakeup_button: wakeup_button {
     label = "WAKEUP_BTN";
     gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>; // wake up pin GPIO1 pin 4
-    wakeup-source; // Mark this device as able to wake the keyboard
     };
   };
 
   wakeup_trigger0: gpio-key-wakeup-trigger {
     compatible = "zmk,gpio-key-wakeup-trigger"; // Use ZMK's GPIO key wakeup driver
     trigger = <&wakeup_button>; // Reference the node's phandle
+    wakeup-source; // Mark this device as able to wake the keyboard
   };
 };
 
