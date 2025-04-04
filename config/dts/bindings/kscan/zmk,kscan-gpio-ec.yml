@@ -41,6 +41,3 @@ properties:
   power-gpios:
     type: phandle-array
     required: true
-  wakeup-gpios:
-    type: phandle-array
-    required: true
