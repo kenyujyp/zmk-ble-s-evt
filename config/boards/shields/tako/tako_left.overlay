@@ -49,12 +49,12 @@
   };
 
   /* potentially problematic */
-  wakeup_trigger00: gpio-key-wakeup-trigger {
+  wakeup_trigger0: gpio-key-wakeup-trigger {
     compatible = "zmk,gpio-key-wakeup-trigger"; // Use ZMK's GPIO key wakeup driver
 
     // GPIO pin settings (example: P0.12 on nRF52840)
     wakeup-gpios = <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
-    trigger= <&wakeup-gpios>;
+    trigger= <&wakeup-gpios 1>;
     wakeup-source; // Mark this device as able to wake the keyboard
   };
 };
