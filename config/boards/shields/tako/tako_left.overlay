@@ -9,7 +9,7 @@
 / {
   chosen {
     zmk,kscan = &kscan0;
-    zmk,kscan = &kscan1;
+    zmk,gpio-key-wakeup-trigger = &gpio-key-wakeup-trigger0;
   };
 
     /* &gpio0 13 -> P0.13  (ROW 0)*/
@@ -49,7 +49,7 @@
   };
 
   /* potentially problematic */
-  kscan1: kscan {
+  gpio-key-wakeup-trigger0: gpio-key-wakeup-trigger {
     compatible = "zmk,gpio-key-wakeup-trigger"; // Use ZMK's GPIO key wakeup driver
 
     // GPIO pin settings (example: P0.12 on nRF52840)
