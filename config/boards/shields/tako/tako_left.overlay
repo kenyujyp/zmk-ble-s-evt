@@ -58,7 +58,7 @@
 
   wakeup_trigger0: gpio-key-wakeup-trigger {
     compatible = "zmk,gpio-key-wakeup-trigger"; // Use ZMK's GPIO key wakeup driver
-    trigger = <&wakeup_button>; // Reference the node's phandle
+    trigger = <&wakeup_button>; // Reference the wakeup_button node's phandle
     wakeup-source; // Mark this device as able to wake the keyboard
   };
 };
