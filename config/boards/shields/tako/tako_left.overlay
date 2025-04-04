@@ -53,8 +53,9 @@
         // - Use &gpio0 for P0.xx pins on nRF52
         // - GPIO_ACTIVE_HIGH: Trigger on high signal or low? not sure
         // - GPIO_PULL_DOWN: Enable pull-down resistor? need or not?
-        trigger = <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+        trigger = <&wakeup-gpios>;
         wakeup-source;  // Marks this GPIO as a wakeup trigger
+        wakeup-gpios = <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
   };
 
 };
