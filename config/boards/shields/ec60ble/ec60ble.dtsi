@@ -36,9 +36,6 @@
   status = "disabled";
 };
 
-&layout_0 {
-    transform = <&default_transform>;
-};
 
 // zephyr_udc0: &usbd { 
 //    compatible = "nordic,nrf-usbd"; 

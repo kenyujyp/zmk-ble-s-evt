@@ -92,3 +92,6 @@
   };
 };
 
+&layout_0 {
+    transform = <&default_transform>;
+};
