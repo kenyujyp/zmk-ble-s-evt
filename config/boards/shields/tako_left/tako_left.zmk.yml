@@ -1,0 +1,8 @@
+file_format: "1"
+id: tako
+name: tako_left
+type: shield
+url: https://fake.com
+features:
+  - keys
+  - studio
