@@ -2,8 +2,11 @@
 #include <physical_layouts.dtsi>
 
 / {
+    chosen {
+        zmk,physical-layout = &layout_0;
+    };
 
-  layout_0: layout_0 {
+    layout_0: layout_0 {
         compatible = "zmk,physical-layout";
         display-name = "Layout 0";
 
