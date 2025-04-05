@@ -5,7 +5,6 @@
  */
 
 #include "tako_left.dtsi"
-#include "tako_left-layouts.dtsi"
 
 / {
   

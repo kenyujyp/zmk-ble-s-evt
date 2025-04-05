@@ -2,14 +2,10 @@
 #include <physical_layouts.dtsi>
 
 / {
-    chosen {
-        zmk,physical-layout = &layout_0;
-    };
 
     layout_0: layout_0 {
         compatible = "zmk,physical-layout";
         display-name = "Layout 0";
-        transform = <&default_transform>;
 
         keys  //                     w   h    x    y     rot    rx    ry
             = <&key_physical_attrs 100 100  250    0       0     0     0>
@@ -96,14 +92,3 @@
   };
 };
 
-zephyr_udc0: &usbd { 
-    compatible = "nordic,nrf-usbd"; 
-    status = "okay"; 
-};
-
-&usbd {
-    status = "okay";
-    cdc_acm_uart: cdc_acm_uart {
-        compatible = "zephyr,cdc-acm-uart";
-    };
-};

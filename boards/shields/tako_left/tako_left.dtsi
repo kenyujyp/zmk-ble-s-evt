@@ -5,12 +5,13 @@
  */
 
 #include <dt-bindings/zmk/matrix_transform.h>
+#include "tako_left-layouts.dtsi"
 
 / {
 
   chosen {
+    zmk,kscan = &kscan0;
     zmk,physical-layout = &layout_0;
-    zmk,matrix_transform = &default_transform;
   };
 
   default_transform: keymap_transform_0 {
@@ -34,4 +35,20 @@
 
 &i2c1 {
   status = "disabled";
+};
+
+&layout_0 {
+    transform = <&default_transform>;
+};
+
+zephyr_udc0: &usbd { 
+    compatible = "nordic,nrf-usbd"; 
+    status = "okay"; 
+};
+
+&usbd {
+    status = "okay";
+    cdc_acm_uart: cdc_acm_uart {
+        compatible = "zephyr,cdc-acm-uart";
+    };
 };
