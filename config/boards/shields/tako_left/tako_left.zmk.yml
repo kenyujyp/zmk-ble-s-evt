@@ -3,6 +3,7 @@ id: tako
 name: tako_left
 type: shield
 url: https://fake.com
+requires: [pro_micro]
 features:
   - keys
   - studio
