@@ -1,6 +1,6 @@
 file_format: "1"
-id: tako
-name: tako_left
+id: ec60ble
+name: ec60ble
 type: shield
 url: https://fake.com
 requires: [pro_micro]
