@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-// #undef ZMK_BEHAVIORS_KEEP_ALL
-// #define ZMK_BEHAVIORS_KEEP_SK
-// #define ZMK_BEHAVIORS_KEEP_MT
-// #define ZMK_BEHAVIORS_KEEP_KT
+/* #undef ZMK_BEHAVIORS_KEEP_ALL
+ * #define ZMK_BEHAVIORS_KEEP_SK
+ * #define ZMK_BEHAVIORS_KEEP_MT
+ * #define ZMK_BEHAVIORS_KEEP_KT
+ */
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
