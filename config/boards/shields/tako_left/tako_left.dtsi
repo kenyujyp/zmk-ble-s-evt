@@ -8,6 +8,8 @@
 #include "tako_left_layouts.dtsi"
 
 / {
+
+  compatible = "zmk,keyboard";  // 👈 Add this line here
   chosen {
     //zmk,kscan = <&kscan0>;
     zmk,matrix_transform = &default_transform;

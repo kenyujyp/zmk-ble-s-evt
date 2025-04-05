@@ -7,7 +7,7 @@
 #include "tako_left.dtsi"
 
 / {
-  compatible = "zmk,keyboard";  // 👈 Add this line here
+  
   chosen {
     zmk,kscan = &kscan0;
     zmk,gpio-key-wakeup-trigger = &wakeup_trigger0;
