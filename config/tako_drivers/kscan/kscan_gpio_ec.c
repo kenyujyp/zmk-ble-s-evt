@@ -34,7 +34,7 @@
  #define INST_MATRIX_LEN(n) (INST_ROWS_LEN(n) * INST_COL_CHANNELS_LEN(n))
  
  // clang-format off
- #if IS_ENABLED(CONFIG_SHIELD_TAKO_LEFT)
+ #if IS_ENABLED(CONFIG_SHIELD_EC60BLE)
  
  /* LEFT HAND */
  const uint16_t actuation_threshold[] = {
