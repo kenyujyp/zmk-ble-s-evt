@@ -2,8 +2,8 @@ file_format: "1"
 id: ec60ble
 name: ec60ble
 type: shield
-url: https://fake.com
+url: none
 requires: [pro_micro]
 features:
   - keys
-  #- studio
+  - studio
