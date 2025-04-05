@@ -9,7 +9,5 @@ manifest:
       remote: zmkfirmware
       revision: main
       import: app/west.yml
-    - name: ec60ble_shield
-      path: boards/shields/ec60ble
   self:
     path: config
