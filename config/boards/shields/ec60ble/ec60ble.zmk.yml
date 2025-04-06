@@ -3,7 +3,6 @@ id: ec60ble
 name: ec60ble
 type: shield
 url: none
-requires: [pro_micro]
 features:
   - keys
   - studio
