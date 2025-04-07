@@ -11,7 +11,7 @@
   chosen {
     zmk,kscan = &kscan0;
     zmk,gpio-key-wakeup-trigger = &wakeup_trigger0;
-    zmk,physical-layout = &layout_0;
+    //zmk,physical-layout = &layout_0;
   };
 
     /* &gpio0 13 -> P0.13  (ROW 0)*/
@@ -59,9 +59,9 @@
   };
 
   wakeup_trigger0: gpio-key-wakeup-trigger {
-    compatible = "zmk,gpio-key-wakeup-trigger"; // Use ZMK's GPIO key wakeup driver
-    trigger = <&wakeup_button>; // Reference the wakeup_button node's phandle
-    wakeup-source; // Mark this device as able to wake the keyboard
+    compatible = "zmk,gpio-key-wakeup-trigger";   /* Use ZMK's GPIO key wakeup driver */
+    trigger = <&wakeup_button>;    /* Reference the wakeup_button node's phandle  */
+    wakeup-source;    /* Mark this device as able to wake the keyboard */
   };
 };
 
