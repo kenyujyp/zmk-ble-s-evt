@@ -5,8 +5,7 @@
  */
 
 #undef ZMK_BEHAVIORS_KEEP_ALL  /* not enabling all behaviors, it works, add the #! */
-/* #define ZMK_BEHAVIORS_KEEP_SK */
-/* #define ZMK_BEHAVIORS_KEEP_MT */
+#define ZMK_BEHAVIORS_KEEP_TD   /* tap dance */
 /* #define ZMK_BEHAVIORS_KEEP_KT */
 
 #include <behaviors.dtsi>
@@ -14,21 +13,58 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>  /* this needed to enable output toggle */
 
-// Using layer taps on thumbs, having quick tap as well helps w/ repeating space/backspace
-&lt { quick_tap_ms = <200>; };
 
 / {
-    /* behaviors {
-     *   hm: homerow_mods {
-     *      compatible = "zmk,behavior-hold-tap";
-     *      label = "homerow mods";
-     *       #binding-cells = <2>;
-     *       tapping_term_ms = <200>;
-     *       flavor = "tap-preferred";
-     *       bindings = <&kp>, <&kp>;
-     *   };
-     * };
-     */
+    behaviors {
+        semi_co: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp SEMI>, <&kp COLON>;
+        };
+        apos: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp APOS>, <&kp DQT>;
+        };
+        lbkt: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp LBKT>, <&kp LBRC>;
+        };
+        rbkt: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp RBKT>, <&kp RBRC>;
+        };
+        comma: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp COMMA>, <&kp LT>;
+        };
+        dot: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp DOT>, <&kp GT>;
+        };
+        flsh: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp FSLH>, <&kp QMARK>;
+        };
+        blsh: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp BSLH>, <&kp PIPE>;
+        };
+    };
 
     keymap {
         compatible = "zmk,keymap";
@@ -36,11 +72,11 @@
         default_layer {
              display-name = "default";
             bindings = <
-                &kp ESC  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6  &kp N7  &kp N8  &kp N9  &kp N0  &kp MINUS  &kp EQUAL  &kp BSLH  &kp GRAVE
-                &kp TAB  &kp Q   &kp W   &kp E   &kp R   &kp T   &kp Y   &kp U   &kp I   &kp O   &kp P   &kp LBKT   &kp RBKT   &kp BSPC
-                &kp CAPS &kp A   &kp S   &kp D   &kp F   &kp G   &kp H   &kp J   &kp K   &kp L   &kp SEMI &kp APOS  &kp ENTER
-                &kp LSHFT &kp Z  &kp X   &kp C   &kp V   &kp B   &kp N   &kp M  &kp COMMA &kp DOT &kp FSLH         &kp UP  &kp TILDE
-                &kp LCTRL &kp LGUI  &kp LALT       &kp SPACE         &kp SPACE         &kp SPACE    &mo 1 &kp RSHFT  &kp LEFT &kp DOWN &kp RIGHT
+                &kp ESC  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6  &kp N7  &kp N8  &kp N9  &kp N0   &kp MINUS  &kp EQUAL  &blsh  &kp GRAVE
+                &kp TAB  &kp Q   &kp W   &kp E   &kp R   &kp T   &kp Y   &kp U   &kp I   &kp O   &kp P    &lbkt      &rbkt      &kp BSPC
+                &kp CAPS &kp A   &kp S   &kp D   &kp F   &kp G   &kp H   &kp J   &kp K   &kp L   &semi_co &apos      &kp ENTER
+                &kp LSHFT &kp Z  &kp X   &kp C   &kp V   &kp B   &kp N   &kp M   &comma  &dot    &flsh    &kp UP     &kp TILDE
+                &kp LCTRL &kp LGUI  &kp LALT       &kp SPACE         &kp SPACE         &kp SPACE    &kp RSHFT &mo 1  &kp LEFT &kp DOWN &kp RIGHT
             >;
         };
 

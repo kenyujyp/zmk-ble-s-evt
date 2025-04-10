@@ -2,6 +2,7 @@ file_format: "1"
 id: ec60ble
 name: ec60ble
 type: shield
+# requires: [pro_micro]  /* not sure if needed */
 url: none
 features:
   - keys
