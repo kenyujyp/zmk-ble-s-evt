@@ -21,43 +21,43 @@
             tapping-term-ms = <200>;
             bindings = <&kp SEMI>, <&kp COLON>;
         };
-        apos: tap_dance_0 {
+        apos: tap_dance_1 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp APOS>, <&kp DQT>;
         };
-        lbkt: tap_dance_0 {
+        lbkt: tap_dance_2 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp LBKT>, <&kp LBRC>;
         };
-        rbkt: tap_dance_0 {
+        rbkt: tap_dance_3 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp RBKT>, <&kp RBRC>;
         };
-        comma: tap_dance_0 {
+        comma: tap_dance_4 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp COMMA>, <&kp LT>;
         };
-        dot: tap_dance_0 {
+        dot: tap_dance_5 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp DOT>, <&kp GT>;
         };
-        flsh: tap_dance_0 {
+        flsh: tap_dance_6 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp FSLH>, <&kp QMARK>;
         };
-        blsh: tap_dance_0 {
+        blsh: tap_dance_7 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
