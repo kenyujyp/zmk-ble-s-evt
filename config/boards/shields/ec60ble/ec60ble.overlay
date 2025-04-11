@@ -11,6 +11,7 @@
   chosen {
     zmk,kscan = &kscan0;
     zmk,gpio-key-wakeup-trigger = &wakeup_trigger0;
+    zephyr,console = &uart0;
   };
 
     /* &gpio0 13 -> P0.13  (ROW 0)*/
@@ -90,3 +91,7 @@
   };
 };
 
+&uart0 {
+    status = "okay";
+    current-speed = <115200>;
+};
