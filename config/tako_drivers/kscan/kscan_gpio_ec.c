@@ -17,8 +17,8 @@
  
  LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
  
- #define WAIT_DISCHARGE()
- #define WAIT_CHARGE()
+ #define WAIT_DISCHARGE() k_busy_wait(10)
+ #define WAIT_CHARGE() k_busy_wait(10)
  
  #define DT_DRV_COMPAT zmk_kscan_gpio_ec
  
@@ -164,9 +164,9 @@
      gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 1);
      gpio_pin_set_dt(&config->mux_en.gpios[inactive_mux_index].spec, 0);
 
-     gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & 1);
-     gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & 2);
-     gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & 4);
+     gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, (ch >> 0) & 1);
+     gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, (ch >> 1) & 1);
+     gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, (ch >> 2) & 1);
      //gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);  // disable current active mux
  
      for (int row = 0; row < config->rows; row++) {
