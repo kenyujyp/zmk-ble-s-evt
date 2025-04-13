@@ -45,7 +45,7 @@
     , <&gpio0 2 GPIO_ACTIVE_HIGH>
     ;
     discharge-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
-    col-channels = <0 3 1 2 5 4 7 6>, <0 3 1 2 5 7 6>;
+    col-channels = <0 3 1 2 5 4 7 6 0 3 1 2 5 7 6>;  /* 2 multiplexer pin number mapping to all channels from #0-14 */
     io-channels = <&adc 1>;
     power-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
   };

@@ -70,7 +70,7 @@
    struct kscan_gpio_list direct;
    struct kscan_gpio_list mux_sels;
    struct kscan_gpio power;
-   struct kscan_gpio mux_en;
+   struct kscan_gpio_list mux_en; // List of mux enable GPIO pins
    struct kscan_gpio discharge;
    struct adc_dt_spec adc_channel;
  
@@ -154,13 +154,17 @@
  
    for (int col = 0; col < config->cols; col++) {
      uint8_t ch = config->col_channels[col];
- 
-     // Select mux
-     gpio_pin_set_dt(&config->mux_en.spec, 1);
+     // Activate mux based on column index (e.g., first 8 columns use mux_en[0])
+     int active_mux_index = (col < 8) ? 0 : 1;
+     int inactive_mux_index = (col < 8) ? 1 : 0;
+     // enable active mux and disable inactive one
+     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 1);
+     gpio_pin_set_dt(&config->mux_en.gpios[inactive_mux_index].spec, 0);
+
      gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & 1);
      gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & 2);
      gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & 4);
-     gpio_pin_set_dt(&config->mux_en.spec, 0);
+     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);  // disable current active mux
  
      for (int row = 0; row < config->rows; row++) {
        const int index = state_index_rc(config, row, col);
@@ -192,9 +196,13 @@
      }
    }
  
-   /* Power off */
-   gpio_pin_set_dt(&config->power.spec, 0);
-   gpio_pin_set_dt(&config->mux_en.spec, 0);
+    /* Power off */
+    gpio_pin_set_dt(&config->power.spec, 0);
+  
+    // Disable both muxes:
+    for (int i = 0; i < config->mux_en.len; i++) {
+      gpio_pin_set_dt(&config->mux_en.gpios[i].spec, 0);
+    }
  
    for (int i = 0; i < config->direct.len; i++) {
      gpio_pin_set_dt(&config->direct.gpios[i].spec, 0);
@@ -282,8 +290,10 @@
                            GPIO_OUTPUT_INACTIVE);
    }
  
-   // Enable mux
-   gpio_pin_configure_dt(&config->mux_en.spec, GPIO_OUTPUT_INACTIVE);
+  // Enable both muxes: GPIO_OUTPUT_INACTIVE= 1??
+  for (int i = 0; i < config->mux_en.len; i++) {
+    gpio_pin_set_dt(&config->mux_en.gpios[i].spec, GPIO_OUTPUT_INACTIVE);
+  }
  
    k_timer_init(&data->work_timer, kscan_ec_timer_handler, NULL);
    k_work_init(&data->work, kscan_ec_work_handler);
@@ -346,7 +356,10 @@
        .direct = KSCAN_GPIO_LIST(kscan_ec_row_gpios_##n),                       \
        .mux_sels = KSCAN_GPIO_LIST(kscan_ec_mux_sel_gpios_##n),                 \
        .power = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), power_gpios, 0),          \
-       .mux_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux_en_gpios, 0),        \
+       .mux_en = KSCAN_GPIO_LIST({                                              \
+        KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux_en_gpios, 0),                 \
+        KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux_en_gpios, 1),                 \
+        }),                                                                     \
        .discharge = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), discharge_gpios, 0),  \
        .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                       \
        .idle_poll_period_ms = DT_INST_PROP(n, idle_poll_period_ms),             \
