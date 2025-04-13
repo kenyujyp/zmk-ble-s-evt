@@ -6,4 +6,4 @@ type: shield
 url: none
 features:
   - keys
-  - studio
+  #- studio

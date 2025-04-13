@@ -40,7 +40,7 @@
 
 // do not know how it work and what are they used for, use with caution
 zephyr_udc0: &usbd {
-    compatible = "nordic,nrf-usbd"; 
+    //compatible = "nordic,nrf-usbd"; 
     status = "okay"; 
 };
 
