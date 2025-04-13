@@ -356,10 +356,9 @@
        .direct = KSCAN_GPIO_LIST(kscan_ec_row_gpios_##n),                       \
        .mux_sels = KSCAN_GPIO_LIST(kscan_ec_mux_sel_gpios_##n),                 \
        .power = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), power_gpios, 0),          \
-       .mux_en = KSCAN_GPIO_LIST({                                              \
-        KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux_en_gpios, 0),                 \
-        KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux_en_gpios, 1),                 \
-        }),                                                                     \
+       .mux_en = KSCAN_GPIO_LIST(                                               \
+        LISTIFY(2, KSCAN_GPIO_GET_BY_IDX, (, ), DT_DRV_INST(n), mux_en_gpios    \
+        )),                                                                      \
        .discharge = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), discharge_gpios, 0),  \
        .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                       \
        .idle_poll_period_ms = DT_INST_PROP(n, idle_poll_period_ms),             \
