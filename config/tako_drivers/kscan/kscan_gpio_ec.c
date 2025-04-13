@@ -23,11 +23,14 @@
  #define DT_DRV_COMPAT zmk_kscan_gpio_ec
  
  #define INST_ROWS_LEN(n) DT_INST_PROP_LEN(n, row_gpios)
+ #define INST_MUX_ENS_LEN(n) DT_INST_PROP_LEN(n, mux_en_gpios)
  #define INST_MUX_SELS_LEN(n) DT_INST_PROP_LEN(n, mux_sel_gpios)
  #define INST_COL_CHANNELS_LEN(n) DT_INST_PROP_LEN(n, col_channels)
  
  #define KSCAN_GPIO_ROW_CFG_INIT(idx, inst_idx)                                 \
    KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(inst_idx), row_gpios, idx)
+ #define KSCAN_GPIO_MUX_EN_CFG_INIT(idx, inst_idx)                              \
+   KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(inst_idx), mux_en_gpios, idx)
  #define KSCAN_GPIO_MUX_SEL_CFG_INIT(idx, inst_idx)                             \
    KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(inst_idx), mux_sel_gpios, idx)
  
@@ -343,6 +346,8 @@
  #define KSCAN_EC_INIT(n)                                                       \
    static struct kscan_gpio kscan_ec_row_gpios_##n[] = {                        \
        LISTIFY(INST_ROWS_LEN(n), KSCAN_GPIO_ROW_CFG_INIT, (, ), n)};            \
+   static struct kscan_gpio kscan_ec_mux_en_gpios_##n[] = {                     \
+       LISTIFY(INST_MUX_ENS_LEN(n), KSCAN_GPIO_MUX_EN_CFG_INIT, (, ), n)};      \
    static struct kscan_gpio kscan_ec_mux_sel_gpios_##n[] = {                    \
        LISTIFY(INST_MUX_SELS_LEN(n), KSCAN_GPIO_MUX_SEL_CFG_INIT, (, ), n)};    \
                                                                                 \
@@ -356,9 +361,7 @@
        .direct = KSCAN_GPIO_LIST(kscan_ec_row_gpios_##n),                       \
        .mux_sels = KSCAN_GPIO_LIST(kscan_ec_mux_sel_gpios_##n),                 \
        .power = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), power_gpios, 0),          \
-       .mux_en = KSCAN_GPIO_LIST(                                               \
-        LISTIFY(2, KSCAN_GPIO_GET_BY_IDX, (, ), DT_DRV_INST(n), mux_en_gpios    \
-        )),                                                                      \
+       .mux_en = KSCAN_GPIO_LIST(kscan_ec_mux_en_gpios_##n),                    \
        .discharge = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), discharge_gpios, 0),  \
        .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                       \
        .idle_poll_period_ms = DT_INST_PROP(n, idle_poll_period_ms),             \
