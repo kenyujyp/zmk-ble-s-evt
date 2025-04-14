@@ -11,7 +11,7 @@
 
   chosen {
     zmk,physical-layout = &layout_0;
-    zmk,matrix_transform = &default_transform; //not using this as physical layout is used
+    //zmk,matrix_transform = &default_transform; //not using this as physical layout is used
   };
 
   /* 3U + 3U split space transform */
