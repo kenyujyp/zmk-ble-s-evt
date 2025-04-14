@@ -167,7 +167,7 @@
      gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, (ch >> 0) & 1);
      gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, (ch >> 1) & 1);
      gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, (ch >> 2) & 1);
-     //gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);  // disable current active mux
+     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);  // disable current active mux
  
      for (int row = 0; row < config->rows; row++) {
        const int index = state_index_rc(config, row, col);
