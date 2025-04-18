@@ -157,29 +157,33 @@
  
    for (int col = 0; col < config->cols; col++) {
      uint8_t ch = config->col_channels[col];
-     // Activate mux based on column index (e.g., first 8 columns use mux_en[0])
+     // activate mux based on column index (e.g., first 8 columns use mux_en[0])
      int active_mux_index = (col < 8) ? 0 : 1;
      int inactive_mux_index = (col < 8) ? 1 : 0;
-     // enable active mux and disable inactive one
-     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 1);
+     // momentarily disable both multiplexers
+     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);
      gpio_pin_set_dt(&config->mux_en.gpios[inactive_mux_index].spec, 0);
 
-     gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, (ch >> 0) & 1);
-     gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, (ch >> 1) & 1);
-     gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, (ch >> 2) & 1);
-     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);  // disable current active mux
- 
+     gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
+     gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
+     gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
+     
+     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 1);  // enable current active mux
+     
      for (int row = 0; row < config->rows; row++) {
        const int index = state_index_rc(config, row, col);
- 
-       gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
- 
+       /* disable all rows */
+       for (int row = 0; row < config->rows; row++) {
+        gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
+       }
+       
        // --- LOCK ---
        const unsigned int lock = irq_lock();
+       // have capacitor charged and set the row pin to high state
        gpio_pin_configure_dt(&config->discharge.spec, GPIO_INPUT);
-       gpio_pin_set_dt(&config->direct.gpios[row].spec, 1);
+       gpio_pin_set_dt(&config->direct.gpios[row].spec, 1);  // enable current row
  
-       WAIT_CHARGE();
+       // WAIT_CHARGE(); try disabling this line
  
        rc = adc_read(config->adc_channel.dev, adc_seq);
        adc_seq->calibrate = false;
@@ -201,11 +205,6 @@
  
     /* Power off */
     gpio_pin_set_dt(&config->power.spec, 0);
-  
-    // Disable both muxes:
-    for (int i = 0; i < config->mux_en.len; i++) {
-      gpio_pin_set_dt(&config->mux_en.gpios[i].spec, 0);
-    }
  
    for (int i = 0; i < config->direct.len; i++) {
      gpio_pin_set_dt(&config->direct.gpios[i].spec, 0);
@@ -293,7 +292,7 @@
                            GPIO_OUTPUT_INACTIVE);
    }
  
-  // Enable both muxes: GPIO_OUTPUT_INACTIVE= 1??
+  // Init both muxes
   for (int i = 0; i < config->mux_en.len; i++) {
     gpio_pin_set_dt(&config->mux_en.gpios[i].spec, GPIO_OUTPUT_INACTIVE);
   }
