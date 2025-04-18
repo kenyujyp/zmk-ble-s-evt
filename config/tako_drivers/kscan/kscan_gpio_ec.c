@@ -153,7 +153,7 @@
    gpio_pin_set_dt(&config->power.spec, 1);
  
    /* Wait for everything to power on. */
-   k_busy_wait(K_MSEC(3));
+   k_busy_wait(3);
  
    for (int col = 0; col < config->cols; col++) {
      uint8_t ch = config->col_channels[col];
