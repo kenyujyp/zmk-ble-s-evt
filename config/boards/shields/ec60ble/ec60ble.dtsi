@@ -5,13 +5,14 @@
  */
 
 #include <dt-bindings/zmk/matrix_transform.h>
-#include "ec60ble-layouts.dtsi"
+/* disable this first to isolate problems */
+/* #include "ec60ble-layouts.dtsi" */
 
 / {
 
   chosen {
-    zmk,physical-layout = &layout_0;
-    //zmk,matrix_transform = &default_transform; //not using this as physical layout is used
+    // zmk,physical-layout = &layout_0;
+    zmk,matrix_transform = &default_transform; //not using this as physical layout is used
   };
 
   /* 3U + 3U split space transform */
@@ -39,14 +40,16 @@
 };
 
 // do not know how it work and what are they used for, use with caution
-zephyr_udc0: &usbd {
-    //compatible = "nordic,nrf-usbd"; 
-    status = "okay"; 
-};
+/* zephyr_udc0: &usbd {
+ *   //compatible = "nordic,nrf-usbd"; 
+ *   status = "okay"; 
+ * };
+ */
 
-&usbd {
-    status = "okay";
-    cdc_acm_uart: cdc_acm_uart {
-        compatible = "zephyr,cdc-acm-uart";
-    };
-};
+/* &usbd {
+ *  status = "okay";
+ *   cdc_acm_uart: cdc_acm_uart {
+ *       compatible = "zephyr,cdc-acm-uart";
+ *   };
+ * };
+ */
