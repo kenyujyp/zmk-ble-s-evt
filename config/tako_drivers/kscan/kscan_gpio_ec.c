@@ -41,19 +41,19 @@
  
  /* LEFT HAND */
  const uint16_t actuation_threshold[] = {
-   500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+   500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
    500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
    500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
    500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
-   500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+   500, 500, 500, 500, 500,
  };
  
  const uint16_t release_threshold[] = {
-   450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
+   450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
    450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
    450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
    450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
-   450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
+   450, 450, 450, 450, 450,
  };
  #endif
  // clang-format on
@@ -94,7 +94,7 @@
                            const int col) {
    __ASSERT(row < config->rows, "Invalid row %i", row);
    __ASSERT(col < config->cols, "Invalid col %i", row);
- 
+   /* offset by one row x col, if row=1, col=14, offset= 1x 14 */
    return (row * config->cols) + col;
  }
  
@@ -153,13 +153,13 @@
    gpio_pin_set_dt(&config->power.spec, 1);
  
    /* Wait for everything to power on. */
-   k_sleep(K_MSEC(3));
+   k_busy_wait(K_MSEC(3));
  
    for (int col = 0; col < config->cols; col++) {
      uint8_t ch = config->col_channels[col];
      // activate mux based on column index (e.g., first 8 columns use mux_en[0])
      int active_mux_index = (col < 8) ? 0 : 1;
-     int inactive_mux_index = (col < 8) ? 1 : 0;
+     int inactive_mux_index = 1 - active_mux_index;
      // momentarily disable both multiplexers
      gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);
      gpio_pin_set_dt(&config->mux_en.gpios[inactive_mux_index].spec, 0);
@@ -175,6 +175,10 @@
       
        // Set the row pin to low state to avoid ghosting
        gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
+      /* disable all rows */
+       //for (int row = 0; row < config->rows; row++) {
+       // gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
+       //}
        
        // --- LOCK ---
        const unsigned int lock = irq_lock();
