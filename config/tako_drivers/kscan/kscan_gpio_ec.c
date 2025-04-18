@@ -95,6 +95,7 @@
    __ASSERT(row < config->rows, "Invalid row %i", row);
    __ASSERT(col < config->cols, "Invalid col %i", row);
    /* offset by one row x col, if row=1, col=14, offset= 1x 14 */
+   /* offset by column length, if row=1, col_len=14, offset= 1x14 */
    return (row * config->cols) + col;
  }
  
@@ -153,7 +154,7 @@
    gpio_pin_set_dt(&config->power.spec, 1);
  
    /* Wait for everything to power on. */
-   k_busy_wait(3);
+   k_sleep(K_MSEC(2));
  
    for (int col = 0; col < config->cols; col++) {
      uint8_t ch = config->col_channels[col];
