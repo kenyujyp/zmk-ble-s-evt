@@ -18,7 +18,7 @@
  LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
  
  #define WAIT_DISCHARGE() k_busy_wait(10)
- #define WAIT_CHARGE() k_busy_wait(5)
+ #define WAIT_CHARGE() k_busy_wait(10)
  
  #define DT_DRV_COMPAT zmk_kscan_gpio_ec
  
@@ -41,11 +41,11 @@
  
  /* LEFT HAND */
  const uint16_t actuation_threshold[] = {
-   550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550,
-   550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550,
-   550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550,
-   550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550,
-   550, 550, 550, 550, 550, 
+   500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+   500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+   500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+   500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
+   500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
  };
  
  const uint16_t release_threshold[] = {
@@ -53,7 +53,7 @@
    450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
    450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
    450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
-   450, 450, 450, 450, 450,
+   450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
  };
  #endif
  // clang-format on
@@ -159,7 +159,7 @@
      uint8_t ch = config->col_channels[col];
      // activate mux based on column index (e.g., first 8 columns use mux_en[0])
      int active_mux_index = (col < 8) ? 0 : 1;
-     int inactive_mux_index = 1 - active_mux_index;
+     int inactive_mux_index = (col < 8) ? 1 : 0;
      // momentarily disable both multiplexers
      gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);
      gpio_pin_set_dt(&config->mux_en.gpios[inactive_mux_index].spec, 0);
@@ -182,8 +182,7 @@
        gpio_pin_configure_dt(&config->discharge.spec, GPIO_INPUT);
        gpio_pin_set_dt(&config->direct.gpios[row].spec, 1);  // enable current row
  
-      /* try disabling this line, and it work like it is not needed */
-       WAIT_CHARGE(); 
+       // WAIT_CHARGE(); try disabling this line
  
        rc = adc_read(config->adc_channel.dev, adc_seq);
        adc_seq->calibrate = false;
