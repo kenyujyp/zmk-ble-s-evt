@@ -153,7 +153,7 @@
    gpio_pin_set_dt(&config->power.spec, 1);
  
    /* Wait for everything to power on. */
-   k_sleep(K_MSEC(2));
+   k_sleep(K_MSEC(3));
  
    for (int col = 0; col < config->cols; col++) {
      uint8_t ch = config->col_channels[col];
@@ -172,10 +172,9 @@
      
      for (int row = 0; row < config->rows; row++) {
        const int index = state_index_rc(config, row, col);
-       /* disable all rows */
-       for (int row = 0; row < config->rows; row++) {
-        gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
-       }
+      
+       // Set the row pin to low state to avoid ghosting
+       gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
        
        // --- LOCK ---
        const unsigned int lock = irq_lock();
@@ -215,23 +214,24 @@
      gpio_pin_set_dt(&config->mux_sels.gpios[i].spec, 0);
    }
  
-   /* Print matrix reads */
-   static int cnt = 0;
-   if (cnt++ >= (300 / config->poll_period_ms)) {
-     cnt = 0;
- 
-     for (int r = 0; r < config->rows; r++) {
-       for (int c = 0; c < config->cols; c++) {
-         const int index = state_index_rc(config, r, c);
-         printk("%6d", matrix_read[index]);
-         if (c < config->cols - 1) {
-           printk(",");
-         }
-       }
-       printk("\n");
-     }
-     printk("\n\n");
-   }
+   /* Print matrix reads, comment it first */
+   /* static int cnt = 0;
+    * if (cnt++ >= (300 / config->poll_period_ms)) {
+    * cnt = 0;
+    * 
+    * for (int r = 0; r < config->rows; r++) {
+    *   for (int c = 0; c < config->cols; c++) {
+    *     const int index = state_index_rc(config, r, c);
+    *     printk("%6d", matrix_read[index]);
+    *     if (c < config->cols - 1) {
+    *       printk(",");
+    *     }
+    *   }
+    *   printk("\n");
+    * }
+    * printk("\n\n");
+    * }
+    */
  
    /* Handle matrix reads */
    for (int r = 0; r < config->rows; r++) {
