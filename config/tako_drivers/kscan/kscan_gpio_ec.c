@@ -172,13 +172,11 @@
      
      for (int row = 0; row < config->rows; row++) {
        const int index = state_index_rc(config, row, col);
-      
-       // Set the row pin to low state to avoid ghosting
-       gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
-      /* disable all rows */
-       //for (int row = 0; row < config->rows; row++) {
-       // gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
-       //}
+
+       /* disable all rows */
+       for (int row = 0; row < config->rows; row++) {
+         gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
+       }
        
        // --- LOCK ---
        const unsigned int lock = irq_lock();
@@ -203,8 +201,8 @@
        gpio_pin_set_dt(&config->discharge.spec, 0);
        gpio_pin_configure_dt(&config->discharge.spec, GPIO_OUTPUT);
        WAIT_DISCHARGE();
-     }
-   }
+    }
+  }
  
     /* Power off */
     gpio_pin_set_dt(&config->power.spec, 0);
