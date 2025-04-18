@@ -40,12 +40,10 @@
     ;
 
     /* 2 multiplexer enable pins in col number ascending order */
-    mux-en-gpios 
-    = <&gpio1 9 GPIO_ACTIVE_HIGH>
-    , <&gpio1 10 GPIO_ACTIVE_HIGH>
-    ;
+    mux-en-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>,<&gpio1 10 GPIO_ACTIVE_HIGH>;
+
     discharge-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
-    col-channels = <0 3 1 2 5 4 7 6 0 3 1 2 5 7>;  /* 2 multiplexer pin number mapping to all channels from #0-14 */
+    col-channels = <0 3 1 2 5 4 7 6 0 3 1 2 5 7>;  /* 2 multiplexer pin number mapping to all channels from #0-13 */
     io-channels = <&adc 1>;
     power-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
   };
