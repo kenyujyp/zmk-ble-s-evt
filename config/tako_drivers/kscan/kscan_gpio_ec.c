@@ -178,7 +178,8 @@
        
        /* check if it is masked for this row col, skip it if yes */
        if (config->row_input_masks && (config->row_input_masks[row] & BIT(col)) != 0) {
-          continue;
+          /* do nothing */
+          //continue;
        }
        
        const int index = state_index_rc(config, row, col);
