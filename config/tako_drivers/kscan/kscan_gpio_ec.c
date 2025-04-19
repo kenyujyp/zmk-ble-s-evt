@@ -154,7 +154,7 @@
  
    /* Wait for everything to power on. */
    k_sleep(K_MSEC(2));
- 
+   /* TO DO, split col channel */
    for (int col = 0; col < config->cols; col++) {
      uint8_t ch = config->col_channels[col];
      // activate mux based on column index (e.g., first 8 columns use mux1_en)
