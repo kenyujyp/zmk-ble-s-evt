@@ -159,8 +159,8 @@
      // activate mux based on column index (e.g., first 8 columns use mux1_en)
      if (col < 8){
       // momentarily disable current multiplexers
-      gpio_pin_set_dt(&config->mux0_en.spec, GPIO_OUTPUT_INACTIVE);
-      gpio_pin_set_dt(&config->mux1_en.spec, GPIO_OUTPUT_INACTIVE);
+      gpio_pin_set_dt(&config->mux0_en.spec, 0);
+      gpio_pin_set_dt(&config->mux1_en.spec, 0);
       /* MUX channel select */
       gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
       gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
@@ -168,8 +168,8 @@
       gpio_pin_set_dt(&config->mux0_en.spec, 1);
      } else{
       // momentarily disable current multiplexers
-      gpio_pin_set_dt(&config->mux1_en.spec, GPIO_OUTPUT_INACTIVE);
-      gpio_pin_set_dt(&config->mux0_en.spec, GPIO_OUTPUT_INACTIVE);
+      gpio_pin_set_dt(&config->mux1_en.spec, 0);
+      gpio_pin_set_dt(&config->mux0_en.spec, 0);
       /* MUX channel select */
       gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
       gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
