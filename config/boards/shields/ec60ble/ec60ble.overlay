@@ -5,10 +5,9 @@
  */
 
 #include <nordic/nrf52840_qiaa.dtsi>
-#include <zephyr/dt-bindings/dt-util.h>
+//#include <zephyr/dt-bindings/dt-util.h>
 #include <zephyr/dt-bindings/adc/adc.h>
 #include <zephyr/dt-bindings/gpio/nordic-nrf-gpio.h>
-#include <dt-bindings/zmk/matrix_transform.h>
 #include <freq.h>
 #include "ec60ble.dtsi"
 
@@ -60,13 +59,6 @@
     row-input-masks = <(BIT(13)) 0 (BIT(13)) (BIT(11)) (BIT(3) + BIT(5) + BIT(6) + BIT(7) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13))>;
   };
 
-  vbatt: vbatt {
-        compatible = "voltage-divider";
-        io-channels = <&adc 3>;
-        
-        output-ohms = <2000000>;
-        full-ohms = <(2000000 + 806000)>;
-  };
 
   gpio_keys {
     compatible = "gpio-keys";
