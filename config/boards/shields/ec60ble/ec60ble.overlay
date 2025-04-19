@@ -5,10 +5,8 @@
  */
 
 #include <nordic/nrf52840_qiaa.dtsi>
-//#include <zephyr/dt-bindings/dt-util.h>
-#include <zephyr/dt-bindings/adc/adc.h>
 #include <zephyr/dt-bindings/gpio/nordic-nrf-gpio.h>
-#include <freq.h>
+
 #include "ec60ble.dtsi"
 
 / {
