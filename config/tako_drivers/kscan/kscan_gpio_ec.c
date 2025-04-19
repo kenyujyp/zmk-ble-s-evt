@@ -85,7 +85,7 @@
    int32_t sleep_poll_period_ms;
  
    const uint32_t *row_input_masks;
-   
+
    int32_t col_channels[];
    
  };
@@ -177,7 +177,7 @@
      for (int row = 0; row < config->rows; row++) {
        
        /* check if it is masked for this row col, skip it if yes */
-       if (cfg->row_input_masks && (cfg->row_input_masks[row] & BIT(col)) != 0) {
+       if (config->row_input_masks && (config->row_input_masks[row] & BIT(col)) != 0) {
           continue;
        }
        
