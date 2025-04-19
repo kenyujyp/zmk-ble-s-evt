@@ -23,14 +23,11 @@
  #define DT_DRV_COMPAT zmk_kscan_gpio_ec
  
  #define INST_ROWS_LEN(n) DT_INST_PROP_LEN(n, row_gpios)
- #define INST_MUX_ENS_LEN(n) DT_INST_PROP_LEN(n, mux_en_gpios)
  #define INST_MUX_SELS_LEN(n) DT_INST_PROP_LEN(n, mux_sel_gpios)
  #define INST_COL_CHANNELS_LEN(n) DT_INST_PROP_LEN(n, col_channels)
  
  #define KSCAN_GPIO_ROW_CFG_INIT(idx, inst_idx)                                 \
    KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(inst_idx), row_gpios, idx)
- #define KSCAN_GPIO_MUX_EN_CFG_INIT(idx, inst_idx)                              \
-   KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(inst_idx), mux_en_gpios, idx)
  #define KSCAN_GPIO_MUX_SEL_CFG_INIT(idx, inst_idx)                             \
    KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(inst_idx), mux_sel_gpios, idx)
  
@@ -73,7 +70,8 @@
    struct kscan_gpio_list direct;
    struct kscan_gpio_list mux_sels;
    struct kscan_gpio power;
-   struct kscan_gpio_list mux_en; // List of mux enable GPIO pins
+   struct kscan_gpio mux1_en; //mux enable GPIO pin
+   struct kscan_gpio mux2_en; //mux enable GPIO pin
    struct kscan_gpio discharge;
    struct adc_dt_spec adc_channel;
  
@@ -84,7 +82,7 @@
    int32_t idle_poll_period_ms;
    int32_t sleep_poll_period_ms;
  
-   const uint32_t *row_input_masks;
+   const uint32_t row_input_masks;
 
    int32_t col_channels[];
    
@@ -161,18 +159,24 @@
  
    for (int col = 0; col < config->cols; col++) {
      uint8_t ch = config->col_channels[col];
-     // activate mux based on column index (e.g., first 8 columns use mux_en[0])
-     int active_mux_index = (col < 8) ? 0 : 1;
-     int inactive_mux_index = 1 - active_mux_index;
-     // momentarily disable both multiplexers
-     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);
-     gpio_pin_set_dt(&config->mux_en.gpios[inactive_mux_index].spec, 0);
-     /* MUX channel select */
-     gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
-     gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
-     gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
-     
-     gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 1);  // enable current active mux
+     // activate mux based on column index (e.g., first 8 columns use mux1_en)
+     if (col<8){
+      // momentarily disable current multiplexers
+      gpio_pin_set_dt(&config->mux1_en.spec, 1);
+      /* MUX channel select */
+      gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
+      gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
+      gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
+      gpio_pin_set_dt(&config->mux1_en.spec, 0);
+     } else{
+      // momentarily disable current multiplexers
+      gpio_pin_set_dt(&config->mux2_en.spec, 1);
+      /* MUX channel select */
+      gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
+      gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
+      gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
+      gpio_pin_set_dt(&config->mux2_en.spec, 0);
+     }
      
      for (int row = 0; row < config->rows; row++) {
        
@@ -201,6 +205,15 @@
  
        if (rc == 0) {
          matrix_read[index] = data->adc_raw;
+         /* Handle matrix reads */
+         const bool pressed = data->matrix_state[index];
+         if (!pressed && matrix_read[index] > actuation_threshold[index]) {
+            data->matrix_state[index] = true;
+            data->callback(data->dev, r, c, true);
+          } else if (pressed && matrix_read[index] < release_threshold[index]) {
+            data->matrix_state[index] = false;
+            data->callback(data->dev, r, c, false);
+          }
        } else {
          LOG_ERR("Failed to read ADC: %d", rc);
          matrix_read[index] = -1;
@@ -244,75 +257,60 @@
     * }
     */
  
-   /* Handle matrix reads */
-   for (int r = 0; r < config->rows; r++) {
-     for (int c = 0; c < config->cols; c++) {
-       const int index = state_index_rc(config, r, c);
-       const bool pressed = data->matrix_state[index];
- 
-       if (!pressed && matrix_read[index] > actuation_threshold[index]) {
-         data->matrix_state[index] = true;
-         data->callback(data->dev, r, c, true);
-       } else if (pressed && matrix_read[index] < release_threshold[index]) {
-         data->matrix_state[index] = false;
-         data->callback(data->dev, r, c, false);
-       }
-     }
-   }
  }
  
  static int kscan_ec_init(const struct device *dev) {
-   LOG_DBG("KSCAN EC init");
- 
-   struct kscan_ec_data *data = dev->data;
-   const struct kscan_ec_config *config = dev->config;
- 
-   int rc = 0;
- 
-   LOG_WRN("EC Channel: %d", config->adc_channel.channel_cfg.channel_id);
-   LOG_WRN("EC Channel 2: %d", config->adc_channel.channel_id);
- 
-   gpio_pin_configure_dt(&config->power.spec, GPIO_OUTPUT_INACTIVE);
- 
-   data->dev = dev;
- 
-   data->adc_seq = (struct adc_sequence){
-       .buffer = &data->adc_raw,
-       .buffer_size = sizeof(data->adc_raw),
-   };
- 
-   rc = adc_channel_setup_dt(&config->adc_channel);
-   if (rc < 0) {
-     LOG_ERR("ADC channel setup error %d", rc);
-   }
- 
-   rc = adc_sequence_init_dt(&config->adc_channel, &data->adc_seq);
-   if (rc < 0) {
-     LOG_ERR("ADC sequence init error %d", rc);
-   }
- 
-   gpio_pin_configure_dt(&config->discharge.spec, GPIO_OUTPUT_INACTIVE);
- 
-   // Init rows
-   for (int i = 0; i < config->direct.len; i++) {
-     gpio_pin_configure_dt(&config->direct.gpios[i].spec, GPIO_OUTPUT_INACTIVE);
-   }
- 
-   // Init mux sel
-   for (int i = 0; i < config->mux_sels.len; i++) {
-     gpio_pin_configure_dt(&config->mux_sels.gpios[i].spec,
-                           GPIO_OUTPUT_INACTIVE);
-   }
- 
-  // Init both muxes
-  for (int i = 0; i < config->mux_en.len; i++) {
-    gpio_pin_set_dt(&config->mux_en.gpios[i].spec, GPIO_OUTPUT_INACTIVE);
-  }
- 
-   k_timer_init(&data->work_timer, kscan_ec_timer_handler, NULL);
-   k_work_init(&data->work, kscan_ec_work_handler);
- 
-   return 0;
+    LOG_DBG("KSCAN EC init");
+  
+    struct kscan_ec_data *data = dev->data;
+    const struct kscan_ec_config *config = dev->config;
+  
+    int rc = 0;
+  
+    LOG_WRN("EC Channel: %d", config->adc_channel.channel_cfg.channel_id);
+    LOG_WRN("EC Channel 2: %d", config->adc_channel.channel_id);
+  
+    gpio_pin_configure_dt(&config->power.spec, GPIO_OUTPUT_INACTIVE);
+  
+    data->dev = dev;
+  
+    data->adc_seq = (struct adc_sequence){
+        .buffer = &data->adc_raw,
+        .buffer_size = sizeof(data->adc_raw),
+    };
+  
+    rc = adc_channel_setup_dt(&config->adc_channel);
+    if (rc < 0) {
+      LOG_ERR("ADC channel setup error %d", rc);
+    }
+  
+    rc = adc_sequence_init_dt(&config->adc_channel, &data->adc_seq);
+    if (rc < 0) {
+      LOG_ERR("ADC sequence init error %d", rc);
+    }
+  
+    gpio_pin_configure_dt(&config->discharge.spec, GPIO_OUTPUT_INACTIVE);
+  
+    // Init rows
+    for (int i = 0; i < config->direct.len; i++) {
+      gpio_pin_configure_dt(&config->direct.gpios[i].spec, GPIO_OUTPUT_INACTIVE);
+    }
+  
+    // Init mux sel
+    for (int i = 0; i < config->mux_sels.len; i++) {
+      gpio_pin_configure_dt(&config->mux_sels.gpios[i].spec,
+                            GPIO_OUTPUT_INACTIVE);
+    }
+  
+    // Init both muxes
+    for (int i = 0; i < config->mux_en.len; i++) {
+      gpio_pin_set_dt(&config->mux_en.gpios[i].spec, GPIO_OUTPUT_INACTIVE);
+    }
+  
+    k_timer_init(&data->work_timer, kscan_ec_timer_handler, NULL);
+    k_work_init(&data->work, kscan_ec_work_handler);
+  
+    return 0;
  }
  
  static int kscan_ec_activity_event_handler(const struct device *dev,
@@ -372,7 +370,8 @@
        .direct = KSCAN_GPIO_LIST(kscan_ec_row_gpios_##n),                       \
        .mux_sels = KSCAN_GPIO_LIST(kscan_ec_mux_sel_gpios_##n),                 \
        .power = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), power_gpios, 0),          \
-       .mux_en = KSCAN_GPIO_LIST(kscan_ec_mux_en_gpios_##n),                    \
+       .mux1_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux1_en_gpio, 0),      \
+       .mux2_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux2_en_gpio, 0),      \
        .discharge = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), discharge_gpios, 0),  \
        .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                       \
        .idle_poll_period_ms = DT_INST_PROP(n, idle_poll_period_ms),             \

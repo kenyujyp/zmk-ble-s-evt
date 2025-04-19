@@ -14,7 +14,10 @@ properties:
   mux-sel-gpios:
     type: phandle-array
     required: true
-  mux-en-gpios:
+  mux1-en-gpio:
+    type: phandle-array
+    required: true
+  mux2-en-gpio:
     type: phandle-array
     required: true
   discharge-gpios:
