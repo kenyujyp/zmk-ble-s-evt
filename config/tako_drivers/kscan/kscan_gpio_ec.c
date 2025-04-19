@@ -70,8 +70,8 @@
    struct kscan_gpio_list direct;
    struct kscan_gpio_list mux_sels;
    struct kscan_gpio power;
+   struct kscan_gpio mux0_en; //mux enable GPIO pin
    struct kscan_gpio mux1_en; //mux enable GPIO pin
-   struct kscan_gpio mux2_en; //mux enable GPIO pin
    struct kscan_gpio discharge;
    struct adc_dt_spec adc_channel;
  
@@ -162,20 +162,20 @@
      // activate mux based on column index (e.g., first 8 columns use mux1_en)
      if (col<8){
       // momentarily disable current multiplexers
+      gpio_pin_set_dt(&config->mux0_en.spec, 1);
+      /* MUX channel select */
+      gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
+      gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
+      gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
+      gpio_pin_set_dt(&config->mux0_en.spec, 0);
+     } else{
+      // momentarily disable current multiplexers
       gpio_pin_set_dt(&config->mux1_en.spec, 1);
       /* MUX channel select */
       gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
       gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
       gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
       gpio_pin_set_dt(&config->mux1_en.spec, 0);
-     } else{
-      // momentarily disable current multiplexers
-      gpio_pin_set_dt(&config->mux2_en.spec, 1);
-      /* MUX channel select */
-      gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
-      gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
-      gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
-      gpio_pin_set_dt(&config->mux2_en.spec, 0);
      }
      
      for (int row = 0; row < config->rows; row++) {
@@ -355,8 +355,6 @@
  #define KSCAN_EC_INIT(n)                                                       \
    static struct kscan_gpio kscan_ec_row_gpios_##n[] = {                        \
        LISTIFY(INST_ROWS_LEN(n), KSCAN_GPIO_ROW_CFG_INIT, (, ), n)};            \
-   static struct kscan_gpio kscan_ec_mux_en_gpios_##n[] = {                     \
-       LISTIFY(INST_MUX_ENS_LEN(n), KSCAN_GPIO_MUX_EN_CFG_INIT, (, ), n)};      \
    static struct kscan_gpio kscan_ec_mux_sel_gpios_##n[] = {                    \
        LISTIFY(INST_MUX_SELS_LEN(n), KSCAN_GPIO_MUX_SEL_CFG_INIT, (, ), n)};    \
                                                                                 \
@@ -370,8 +368,8 @@
        .direct = KSCAN_GPIO_LIST(kscan_ec_row_gpios_##n),                       \
        .mux_sels = KSCAN_GPIO_LIST(kscan_ec_mux_sel_gpios_##n),                 \
        .power = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), power_gpios, 0),          \
-       .mux1_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux1_en_gpio, 0),      \
-       .mux2_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux2_en_gpio, 0),      \
+       .mux0_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux0_en_gpios, 0),      \
+       .mux1_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux1_en_gpios, 0),      \
        .discharge = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), discharge_gpios, 0),  \
        .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                       \
        .idle_poll_period_ms = DT_INST_PROP(n, idle_poll_period_ms),             \
