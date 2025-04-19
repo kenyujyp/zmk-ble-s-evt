@@ -204,10 +204,10 @@
          const bool pressed = data->matrix_state[index];
          if (!pressed && matrix_read[index] > actuation_threshold[index]) {
             data->matrix_state[index] = true;
-            data->callback(data->dev, r, c, true);
+            data->callback(data->dev, row, col, true);
           } else if (pressed && matrix_read[index] < release_threshold[index]) {
             data->matrix_state[index] = false;
-            data->callback(data->dev, r, c, false);
+            data->callback(data->dev, row, col, false);
           }
        } else {
          LOG_ERR("Failed to read ADC: %d", rc);
