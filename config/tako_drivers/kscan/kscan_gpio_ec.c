@@ -81,8 +81,6 @@
    int32_t poll_period_ms;
    int32_t idle_poll_period_ms;
    int32_t sleep_poll_period_ms;
- 
-   const uint32_t row_input_masks;
 
    int32_t col_channels[];
    
@@ -181,10 +179,7 @@
      for (int row = 0; row < config->rows; row++) {
        
        /* check if it is masked for this row col, skip it if yes */
-       if (config->row_input_masks && (config->row_input_masks[row] & BIT(col)) != 0) {
-          /* do nothing */
-          //continue;
-       }
+       /* if (config->row_input_masks && (config->row_input_masks[row] & BIT(col)) != 0) {} */
        
        const int index = state_index_rc(config, row, col);
        /* disable all rows */
@@ -375,7 +370,6 @@
        .idle_poll_period_ms = DT_INST_PROP(n, idle_poll_period_ms),             \
        .sleep_poll_period_ms = DT_INST_PROP(n, sleep_poll_period_ms),           \
        .col_channels = DT_INST_PROP(n, col_channels),                           \
-       .row_input_masks = DT_INST_PROP(n, row_input_masks),                     \
        .rows = INST_ROWS_LEN(n),                                                \
        .cols = INST_COL_CHANNELS_LEN(n),                                        \
        .adc_channel = ADC_DT_SPEC_INST_GET(n),                                  \
