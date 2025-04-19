@@ -164,7 +164,7 @@
      // momentarily disable both multiplexers
      gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 0);
      gpio_pin_set_dt(&config->mux_en.gpios[inactive_mux_index].spec, 0);
-
+     /* MUX channel select */
      gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
      gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
      gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
@@ -205,8 +205,8 @@
     }
   }
  
-    /* Power off */
-    gpio_pin_set_dt(&config->power.spec, 0);
+   /* Power off */
+   gpio_pin_set_dt(&config->power.spec, 0);
  
    for (int i = 0; i < config->direct.len; i++) {
      gpio_pin_set_dt(&config->direct.gpios[i].spec, 0);
