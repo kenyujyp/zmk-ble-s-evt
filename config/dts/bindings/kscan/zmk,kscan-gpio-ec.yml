@@ -41,3 +41,6 @@ properties:
   power-gpios:
     type: phandle-array
     required: true
+  row-input-masks:
+    type: array
+    required: true

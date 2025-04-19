@@ -85,6 +85,7 @@
    int32_t sleep_poll_period_ms;
  
    int32_t col_channels[];
+   const uint32_t *row_input_masks;
  };
  
  /**
@@ -172,8 +173,13 @@
      gpio_pin_set_dt(&config->mux_en.gpios[active_mux_index].spec, 1);  // enable current active mux
      
      for (int row = 0; row < config->rows; row++) {
+       
+       /* check if it is masked for this row col, skip it if yes */
+       if (cfg->row_input_masks && (cfg->row_input_masks[row] & BIT(col)) != 0) {
+          continue;
+       }
+       
        const int index = state_index_rc(config, row, col);
-
        /* disable all rows */
        for (int row = 0; row < config->rows; row++) {
          gpio_pin_set_dt(&config->direct.gpios[row].spec, 0);
@@ -369,6 +375,7 @@
        .idle_poll_period_ms = DT_INST_PROP(n, idle_poll_period_ms),             \
        .sleep_poll_period_ms = DT_INST_PROP(n, sleep_poll_period_ms),           \
        .col_channels = DT_INST_PROP(n, col_channels),                           \
+       .row_input_masks = DT_INST_PROP(n, row_input_masks),                     \
        .rows = INST_ROWS_LEN(n),                                                \
        .cols = INST_COL_CHANNELS_LEN(n),                                        \
        .adc_channel = ADC_DT_SPEC_INST_GET(n),                                  \
