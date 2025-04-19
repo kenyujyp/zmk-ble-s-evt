@@ -298,9 +298,8 @@
     }
   
     // Init both muxes
-    for (int i = 0; i < config->mux_en.len; i++) {
-      gpio_pin_set_dt(&config->mux_en.gpios[i].spec, GPIO_OUTPUT_INACTIVE);
-    }
+    gpio_pin_set_dt(&config->mux0_en.spec, GPIO_OUTPUT_INACTIVE);
+    gpio_pin_set_dt(&config->mux1_en.spec, GPIO_OUTPUT_INACTIVE);
   
     k_timer_init(&data->work_timer, kscan_ec_timer_handler, NULL);
     k_work_init(&data->work, kscan_ec_work_handler);
