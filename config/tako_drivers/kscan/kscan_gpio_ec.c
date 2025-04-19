@@ -154,26 +154,26 @@
  
    /* Wait for everything to power on. */
    k_sleep(K_MSEC(2));
-   /* TO DO, split col channel */
+
    for (int col = 0; col < config->cols; col++) {
-     uint8_t ch = config->col_channels[col];
+     uint16_t ch = config->col_channels[col];
      // activate mux based on column index (e.g., first 8 columns use mux1_en)
-     if (col<8){
+     if (col < 8){
       // momentarily disable current multiplexers
-      gpio_pin_set_dt(&config->mux0_en.spec, 1);
+      gpio_pin_set_dt(&config->mux0_en.spec, 0);
       /* MUX channel select */
       gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
       gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
       gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
-      gpio_pin_set_dt(&config->mux0_en.spec, 0);
+      gpio_pin_set_dt(&config->mux0_en.spec, 1);
      } else{
       // momentarily disable current multiplexers
-      gpio_pin_set_dt(&config->mux1_en.spec, 1);
+      gpio_pin_set_dt(&config->mux1_en.spec, 0);
       /* MUX channel select */
       gpio_pin_set_dt(&config->mux_sels.gpios[0].spec, ch & (1 << 0));
       gpio_pin_set_dt(&config->mux_sels.gpios[1].spec, ch & (1 << 1));
       gpio_pin_set_dt(&config->mux_sels.gpios[2].spec, ch & (1 << 2));
-      gpio_pin_set_dt(&config->mux1_en.spec, 0);
+      gpio_pin_set_dt(&config->mux1_en.spec, 1);
      }
      
      for (int row = 0; row < config->rows; row++) {
@@ -205,6 +205,7 @@
          if (!pressed && matrix_read[index] > actuation_threshold[index]) {
             data->matrix_state[index] = true;
             data->callback(data->dev, row, col, true);
+            data->matrix_state[index] = false;  // this may cause problem
           } else if (pressed && matrix_read[index] < release_threshold[index]) {
             data->matrix_state[index] = false;
             data->callback(data->dev, row, col, false);
