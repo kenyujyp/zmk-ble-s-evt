@@ -84,8 +84,10 @@
    int32_t idle_poll_period_ms;
    int32_t sleep_poll_period_ms;
  
-   int32_t col_channels[];
    const uint32_t *row_input_masks;
+   
+   int32_t col_channels[];
+   
  };
  
  /**
