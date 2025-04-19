@@ -206,7 +206,6 @@
          if (!pressed && matrix_read[index] > actuation_threshold[index]) {
             data->matrix_state[index] = true;
             data->callback(data->dev, row, col, true);
-            data->matrix_state[index] = false;  // this may cause problem
           } else if (pressed && matrix_read[index] < release_threshold[index]) {
             data->matrix_state[index] = false;
             data->callback(data->dev, row, col, false);
