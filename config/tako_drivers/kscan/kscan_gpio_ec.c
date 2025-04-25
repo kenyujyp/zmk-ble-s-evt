@@ -17,9 +17,6 @@
  
  LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
  
- #define WAIT_DISCHARGE() k_busy_wait(10)
- #define WAIT_CHARGE() k_busy_wait(10)
- 
  #define DT_DRV_COMPAT zmk_kscan_gpio_ec
  
  #define INST_ROWS_LEN(n) DT_INST_PROP_LEN(n, row_gpios)
@@ -56,14 +53,11 @@
  // clang-format on
  
  struct kscan_ec_data {
-   const struct device *dev;
-   struct adc_sequence adc_seq;
-   int16_t adc_raw;
- 
-   struct k_work work;
-   struct k_timer work_timer;
    kscan_callback_t callback;
-   bool *matrix_state;
+   uint16_t poll_interval;
+   struct k_work_delayable poll;
+   bool matrix_state[MATRIX_CELLS];
+   const struct device *dev;
  };
  
  struct kscan_ec_config {
@@ -78,9 +72,12 @@
    size_t rows;
    size_t cols;
  
-   int32_t poll_period_ms;
-   int32_t idle_poll_period_ms;
-   int32_t sleep_poll_period_ms;
+   const uint16_t matrix_warm_up_ms;
+   const uint16_t matrix_relax_us;
+   const uint16_t adc_read_settle_us;
+   const uint16_t active_polling_interval_ms;
+   const uint16_t idle_polling_interval_ms;
+   const uint16_t sleep_polling_interval_ms;
 
    int32_t col_channels[];
    
@@ -102,14 +99,13 @@
    LOG_DBG("KSCAN EC configure");
  
    struct kscan_ec_data *data = dev->data;
- 
-   if (!callback) {
-     return -EINVAL;
-   }
- 
-   data->callback = callback;
- 
-   return 0;
+    if (!callback)
+    {
+        return -EINVAL;
+    }
+    data->callback = callback;
+    LOG_DBG("Configured KSCAN");
+    return 0;
  }
  
  static int kscan_ec_enable(const struct device *dev) {
@@ -118,41 +114,43 @@
    struct kscan_ec_data *data = dev->data;
    const struct kscan_ec_config *config = dev->config;
  
-   k_timer_start(&data->work_timer, K_MSEC(config->poll_period_ms),
-                 K_MSEC(config->poll_period_ms));
+   k_work_schedule(&data->poll, K_MSEC(data->poll_interval));
+   return 0;
  
    return 0;
  }
  
  static int kscan_ec_disable(const struct device *dev) {
-   LOG_DBG("KSCAN EC disable");
- 
-   struct kscan_ec_data *data = dev->data;
-   k_timer_stop(&data->work_timer);
- 
-   return 0;
- }
- 
- static void kscan_ec_timer_handler(struct k_timer *timer) {
-   struct kscan_ec_data *data =
-       CONTAINER_OF(timer, struct kscan_ec_data, work_timer);
-   k_work_submit(&data->work);
+  LOG_DBG("KSCAN API disable");
+  struct kscan_ec_data *data = dev->data;
+  k_work_cancel_delayable(&data->poll);
+  return 0;
  }
  
  static void kscan_ec_work_handler(struct k_work *work) {
-   struct kscan_ec_data *data = CONTAINER_OF(work, struct kscan_ec_data, work);
+
+   struct k_work_delayable *d_work = k_work_delayable_from_work(work);
+   struct kscan_ec_data *data = CONTAINER_OF(d_work, struct kscan_ec_data, poll);
    const struct kscan_ec_config *config = data->dev->config;
-   struct adc_sequence *adc_seq = &data->adc_seq;
+   const struct device *dev = data->dev;
  
    int rc;
  
    int16_t matrix_read[config->rows * config->cols];
  
-   /* Power on */
+   /* power on everything */
    gpio_pin_set_dt(&config->power.spec, 1);
+
+   for (int i = 0; i < config->direct.len; i++) {
+    gpio_pin_set_dt(&config->direct.gpios[i].spec, 1);
+  }
+
+  for (int i = 0; i < config->mux_sels.len; i++) {
+    gpio_pin_set_dt(&config->mux_sels.gpios[i].spec, 1);
+  }
  
-   /* Wait for everything to power on. */
-   k_sleep(K_MSEC(2));
+   // The board needs some time to be operational after powering up
+   k_sleep(K_MSEC(cfg->matrix_warm_up_ms));
 
    for (int col = 0; col < config->cols; col++) {
      uint16_t ch = config->col_channels[col];
@@ -302,6 +300,8 @@
     gpio_pin_set_dt(&config->mux0_en.spec, GPIO_OUTPUT_INACTIVE);
     gpio_pin_set_dt(&config->mux1_en.spec, GPIO_OUTPUT_INACTIVE);
   
+    data->poll_interval = cfg->active_polling_interval_ms;
+    k_work_init_delayable(&data->poll, kscan_ec_timer_handler);
     k_timer_init(&data->work_timer, kscan_ec_timer_handler, NULL);
     k_work_init(&data->work, kscan_ec_work_handler);
   
@@ -323,13 +323,13 @@
  
    switch (ev->state) {
    case ZMK_ACTIVITY_ACTIVE:
-     poll_period = config->poll_period_ms;
+     poll_period = config->active_polling_interval_ms;
      break;
    case ZMK_ACTIVITY_IDLE:
-     poll_period = config->idle_poll_period_ms;
+     poll_period = config->idle_polling_interval_ms;
      break;
    case ZMK_ACTIVITY_SLEEP:
-     poll_period = config->sleep_poll_period_ms;
+     poll_period = config->sleep_polling_interval_ms;
      break;
    default:
      LOG_WRN("Unsupported activity state: %d", ev->state);
@@ -366,9 +366,12 @@
        .mux0_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux0_en_gpios, 0),      \
        .mux1_en = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), mux1_en_gpios, 0),      \
        .discharge = KSCAN_GPIO_GET_BY_IDX(DT_DRV_INST(n), discharge_gpios, 0),  \
-       .poll_period_ms = DT_INST_PROP(n, poll_period_ms),                       \
-       .idle_poll_period_ms = DT_INST_PROP(n, idle_poll_period_ms),             \
-       .sleep_poll_period_ms = DT_INST_PROP(n, sleep_poll_period_ms),           \
+       .matrix_warm_up_ms = DT_INST_PROP(n, matrix_warm_up_ms),                 \
+       .matrix_relax_us = DT_INST_PROP(n, matrix_relax_us),                     \
+       .adc_read_settle_us = DT_INST_PROP(n, adc_read_settle_us),               \
+       .active_polling_interval_ms = DT_INST_PROP(n, active_polling_interval_ms),      \
+       .idle_polling_interval_ms = DT_INST_PROP(n, idle_polling_interval_ms),   \
+       .sleep_polling_interval_ms = DT_INST_PROP(n, sleep_polling_interval_ms), \
        .col_channels = DT_INST_PROP(n, col_channels),                           \
        .rows = INST_ROWS_LEN(n),                                                \
        .cols = INST_COL_CHANNELS_LEN(n),                                        \
