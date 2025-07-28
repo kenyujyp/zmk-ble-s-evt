@@ -39,6 +39,9 @@
 
 
 / {
+    model = "Le Zapybara";
+    compatible = "nordic,nrf52840";
+
     chosen {
         zmk,kscan = &matrix;
         zephyr,code-partition = &code_partition;
