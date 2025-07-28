@@ -80,8 +80,3 @@
         };
     };
 };
-
-&layout_0 {
-    transform = <&transform>;
-    kscan = <&matrix>;
-};
