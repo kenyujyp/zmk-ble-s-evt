@@ -41,13 +41,13 @@ CONFIG_SHELL_TAB=y
 # Enable print functions
 CONFIG_PRINTK=y
 # Enable shell subsystem          
-CONFIG_SHELL=y
-CONFIG_SENSOR_SHELL=n
+#CONFIG_SHELL=y
+#CONFIG_SENSOR_SHELL=n
 # Set shell log level     
 #CONFIG_SHELL_LOG_LEVEL_INF=1
 
 # Floating-point printf support
-CONFIG_CBPRINTF_COMPLETE=y
+#CONFIG_CBPRINTF_COMPLETE=y
 
 # If using sensors, ensure proper shell config
 #CONFIG_SENSOR=y
