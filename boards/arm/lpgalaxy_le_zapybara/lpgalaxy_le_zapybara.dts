@@ -52,7 +52,8 @@
     };
 
     matrix: matrix {
-		compatible = "zmk,kscan-ec-matrix";
+        /* need to be careful with kscan compatible type */
+		compatible = "zmk,kscan-gpio-ec";
 
 		matrix-relax-us = <800>;
         matrix-warm-up-ms = <5>;
