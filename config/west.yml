@@ -12,9 +12,9 @@ manifest:
       remote: zmkfirmware
       revision: main
       import: app/west.yml
-    - name: zmk-shell-cmd
-      remote: kenyujy
-      revision: main
+    #- name: zmk-shell-cmd
+    #  remote: kenyujy
+    #  revision: main
   self:
     path: config
 
