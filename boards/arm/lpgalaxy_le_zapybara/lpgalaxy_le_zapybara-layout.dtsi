@@ -1,14 +1,14 @@
-
 #include <physical_layouts.dtsi>
 
 /* write a layout with all the keys */
 /* then define layouts with less keys and reference the full key layout */
 /* If keyboard has multiple layouts, define multiple matrix transformations and multiple physical layouts, one for each layout */
+
 / {
 
     layout_0: layout_0 {
         compatible = "zmk,physical-layout";
-        display-name = "Layout 0";
+	    display-name = "Standard";
 
         keys  //                     w   h    x    y     rot    rx    ry
             = <&key_physical_attrs 100 100  250    0       0     0     0>
@@ -71,8 +71,17 @@
             , <&key_physical_attrs 300 100  950  400       0     0     0>
             ;
     };
+    position_map {
+        compatible = "zmk,physical-layout-position-map";
+
+        layout_0 {
+            physical-layout = <&layout_0>;
+            positions = <>;
+        };
+    };
 };
 
 &layout_0 {
-    transform = <&default_transform>;
+    transform = <&transform>;
+    kscan = <&matrix>;
 };

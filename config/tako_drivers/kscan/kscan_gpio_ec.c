@@ -31,9 +31,7 @@
  #define INST_MATRIX_LEN(n) (INST_ROWS_LEN(n) * INST_COL_CHANNELS_LEN(n))
  
  // clang-format off
- #if IS_ENABLED(CONFIG_SHIELD_EC60BLE)
  
- /* LEFT HAND */
  const uint16_t actuation_threshold[] = {
    500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
    500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
@@ -49,7 +47,6 @@
    450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450,
    450, 450, 450, 450, 450,
  };
- #endif
  // clang-format on
  
  struct kscan_ec_data {
@@ -203,6 +200,7 @@
          const bool pressed = data->matrix_state[index];
          if (!pressed && matrix_read[index] > actuation_threshold[index]) {
             data->matrix_state[index] = true;
+            /* add console output here */
             data->callback(data->dev, row, col, true);
           } else if (pressed && matrix_read[index] < release_threshold[index]) {
             data->matrix_state[index] = false;
