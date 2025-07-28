@@ -80,3 +80,7 @@
         };
     };
 };
+
+&layout_0 {
+    transform = <&transform>;
+};
