@@ -17,3 +17,5 @@ manifest:
       revision: main
   self:
     path: config
+
+# putting extra file or folder in config will cause the board being not recognizable !!
