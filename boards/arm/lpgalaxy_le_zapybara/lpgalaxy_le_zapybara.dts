@@ -39,8 +39,6 @@
 
 
 / {
-    model = "Le Zapybara";
-    compatible = "nordic,nrf52840";
 
     chosen {
         zmk,kscan = &matrix;
