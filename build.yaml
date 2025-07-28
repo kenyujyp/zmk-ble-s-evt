@@ -14,8 +14,7 @@
 #
 ---
 include:
-  - board: nice_nano_v2
-    shield: ec60ble
+  - board: lpgalaxy_le_zapybara
     cmake-args: -DZMK_EXTRA_MODULES="${GITHUB_WORKSPACE}/config/tako_drivers/"
-    #snippet: zmk-usb-logging
+    snippet: zmk-usb-logging
     #snippet: zmk-usb-logging
