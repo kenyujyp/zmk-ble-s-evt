@@ -77,12 +77,12 @@
         ;
 
         row-gpios
-		    = <&gpio0 13  (GPIO_ACTIVE_HIGH)>
-            , <&gpio0 24 (GPIO_ACTIVE_HIGH)>
-            , <&gpio0 3  (GPIO_ACTIVE_HIGH)>
-            , <&gpio1 6  (GPIO_ACTIVE_HIGH)>
-            , <&gpio1 11  (GPIO_ACTIVE_HIGH)>
-            ;
+		= <&gpio0 13  (GPIO_ACTIVE_HIGH)>
+        , <&gpio0 24 (GPIO_ACTIVE_HIGH)>
+        , <&gpio0 3  (GPIO_ACTIVE_HIGH)>
+        , <&gpio1 6  (GPIO_ACTIVE_HIGH)>
+        , <&gpio1 11  (GPIO_ACTIVE_HIGH)>
+        ;
     
         row-input-masks = <
             (BIT(13))
@@ -219,6 +219,18 @@ zephyr_udc0: &usbd {
     channel@1 {
         zephyr,input-positive = <NRF_SAADC_AIN4>; /* P0.28 */
     };
+};
+
+&gpiote {
+	status = "okay";
+};
+/* enable gpio port 0 */
+&gpio0 {
+	status = "okay";
+};
+/* enable gpio port 1 */
+&gpio1 {
+	status = "okay";
 };
 
 /*
