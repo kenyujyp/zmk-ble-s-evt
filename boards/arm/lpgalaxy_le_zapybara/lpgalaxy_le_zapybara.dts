@@ -70,12 +70,13 @@
         mux0-en-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
         mux1-en-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
 
+        /* mux channel select gpios, in ascending order */
         mux-sel-gpios
         = <&gpio0 29 GPIO_ACTIVE_HIGH>
         , <&gpio0 30 GPIO_ACTIVE_HIGH>
         , <&gpio0 31 GPIO_ACTIVE_HIGH>
         ;
-
+        /* row gpios, in ascending order */
         row-gpios
 		= <&gpio0 13  (GPIO_ACTIVE_HIGH)>
         , <&gpio0 24 (GPIO_ACTIVE_HIGH)>
@@ -92,8 +93,8 @@
             (BIT(3) + BIT(5) + BIT(6) + BIT(7) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13))
         >;
 
-		/* 2 multiplexer pin number mapping to all channels from #0-14 */
-        col-channels = <0 3 1 2 5 4 7 6 0 3 1 2 5 7>;
+		/* 2 multiplexer pin number mapping to all channels from #0-15 */
+        col-channels = <0 3 1 2 5 4 7 6 0 3 1 2 5 7 6>;
     };
 
     vbatt: vbatt {
@@ -232,92 +233,3 @@ zephyr_udc0: &usbd {
 &gpio1 {
 	status = "okay";
 };
-
-/*
-&matrix {
-		precalib-avg-highs = <
-            3509
-            3278
-            3054
-            3106
-            3633
-            3004
-            3474
-            3652
-            2868
-            3550
-            2930
-            3621
-            3548
-            3636
-            3343
-            3430
-            3581
-            3584
-            3253
-            3609
-            3651
-            3318
-            3271
-            3345
-            3643
-            3495
-            3578
-            3281
-            3258
-            3258
-            3258
-            3258
-            3258
-            3437
-            3251
-            2826
-            3315
-            3258
-            3258
-            3258
-	    >;
-        precalib-avg-lows = <
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            750
-            500
-            680
-            680
-            790
-            576
-            407
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-            500
-	    >;
-};
-*/
