@@ -86,11 +86,11 @@
         ;
         
         row-input-masks = <
-            (0b0111111111111111)
-            (0b0111111111111111)
-            (0b0111111111111111)
-            (0b0111111111111111)
-            (0b0111111111111111)
+            (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
+            (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
+            (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
+            (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
+            (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
         >;
         /*
         row-input-masks = <
