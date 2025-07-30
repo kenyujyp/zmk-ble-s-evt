@@ -15,11 +15,11 @@ manifest:
     - name: zmk-gpio-ec
       remote: kenyujy
       revision: main
-    #- name: zmk-shell-cmd
-    #  remote: kenyujy
-    #  revision: main
+    - name: zmk-shell-cmd
+      remote: kenyujy
+      revision: main
   self:
     path: config
 
 # putting extra file or folder in config will cause the board being not recognizable !!
-# dummy trigger
+# need to import them as modules
