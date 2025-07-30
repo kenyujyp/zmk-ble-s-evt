@@ -85,6 +85,7 @@
         , <&gpio1 11  (GPIO_ACTIVE_HIGH)>
         ;
         
+        /*
         row-input-masks = <
             (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
             (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
@@ -92,7 +93,8 @@
             (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
             (BIT(0) + BIT(1) + BIT(2) + BIT(3) + BIT(4) + BIT(5) + BIT(6) + BIT(7) + BIT(8) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13) + BIT(14))
         >;
-        /*
+        */
+
         row-input-masks = <
             (BIT(13))
             0
@@ -100,7 +102,7 @@
             (BIT(11))
             (BIT(3) + BIT(5) + BIT(6) + BIT(7) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13))
         >;
-        */
+
 
 		/* 2 multiplexer pin number mapping to all channels from #0-15 */
         col-channels = <0 3 1 2 5 4 7 6 0 3 1 2 5 7 6>;

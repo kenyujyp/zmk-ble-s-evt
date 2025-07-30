@@ -7,8 +7,7 @@ CONFIG_BOARD_LPGALAXY_LE_ZAPYBARA=y
 # Enable MPU
 CONFIG_ARM_MPU=y
 
-# Enable during calibration. do not use! compile error!
-#CONFIG_ZMK_USB_LOGGING=y
+# Enable during calibration. should be disable in production
 CONFIG_LOG=y
 CONFIG_ZMK_LOG_LEVEL_DBG=y
 CONFIG_LOG_PRINTK=y
