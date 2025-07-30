@@ -30,6 +30,7 @@ CONFIG_ZMK_SLEEP=n
 #CONFIG_ZMK_IDLE_TIMEOUT=5000
 #CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=300000
 
+# flash memory config
 CONFIG_USE_DT_CODE_PARTITION=y
 CONFIG_BUILD_OUTPUT_UF2=y
 
@@ -44,21 +45,5 @@ CONFIG_FLASH_MAP=y
 # shell command auto complete
 CONFIG_SHELL=y
 CONFIG_SHELL_TAB=y
-# Enable print functions
+# enable print functions
 CONFIG_PRINTK=y
-# Enable shell subsystem          
-
-#CONFIG_SENSOR_SHELL=n
-# Set shell log level     
-#CONFIG_SHELL_LOG_LEVEL_INF=1
-
-# Floating-point printf support
-#CONFIG_CBPRINTF_COMPLETE=y
-
-# If using sensors, ensure proper shell config
-#CONFIG_SENSOR=y
-#CONFIG_SENSOR_SHELL=y
-
-# Optional: Reduce memory impact
-#CONFIG_CBPRINTF_FP_SUPPORT=y
-#CONFIG_CBPRINTF_FP_A_SUPPORT=y
