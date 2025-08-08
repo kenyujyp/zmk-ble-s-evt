@@ -62,27 +62,23 @@
         io-channels = <&adc 1>;
         
         discharge-gpios = <&gpio0 2 (GPIO_ACTIVE_HIGH | NRF_GPIO_DRIVE_H0H1)>;
-        power-gpios = <&gpio1 13 (GPIO_ACTIVE_HIGH)>;
+        //power-gpios = <&gpio1 13 (GPIO_ACTIVE_HIGH)>;
 
 		// 2 multiplexer enable pins in col number ascending order
         mux0-en-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-        mux1-en-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
 
         /* mux channel select gpios, in ascending order */
         mux-sel-gpios
-        = <&gpio0 29 GPIO_ACTIVE_HIGH>
-        , <&gpio0 30 GPIO_ACTIVE_HIGH>
-        , <&gpio0 31 GPIO_ACTIVE_HIGH>
+        = <&gpio1 13 GPIO_ACTIVE_HIGH>
+        , <&gpio0 28 GPIO_ACTIVE_HIGH>
+        , <&gpio0 3 GPIO_ACTIVE_HIGH>
         ;
-        /* 2 multiplexer pin number mapping to all channels from #0-15 */
-        col-channels = <0 3 1 2 5 4 7 6 0 3 1 2 5 7 6>;
+        /* multiplexer pin number mapping to all channels from #0-15 */
+        col-channels = <3 0 5 7>;
         /* row gpios, in ascending order */
         row-gpios
-		= <&gpio0 13  (GPIO_ACTIVE_HIGH)>
-        , <&gpio0 24 (GPIO_ACTIVE_HIGH)>
-        , <&gpio0 3  (GPIO_ACTIVE_HIGH)>
-        , <&gpio1 6  (GPIO_ACTIVE_HIGH)>
-        , <&gpio1 11  (GPIO_ACTIVE_HIGH)>
+		= <&gpio1 11  (GPIO_ACTIVE_HIGH)>
+        , <&gpio1 10 (GPIO_ACTIVE_HIGH)>
         ;
         
         /*
@@ -96,11 +92,8 @@
         */
 
         row-input-masks = <
-            (BIT(13))
             0
-            (BIT(13))
-            (BIT(11))
-            (BIT(3) + BIT(5) + BIT(6) + BIT(7) + BIT(9) + BIT(10) + BIT(11) + BIT(12) + BIT(13))
+            0
         >;
     };
 
@@ -108,29 +101,27 @@
         compatible = "zmk,battery-voltage-divider";
         io-channels = <&adc 3>;
         output-ohms = <2000000>;
-        full-ohms = <(2000000 + 806000)>;
+        full-ohms = <(2000000 + 820000)>;
     };
 
     /* motion sensor interrupt */
     motion_interrupt_pin: motion_interrupt {
         compatible = "gpio-keys";
         my_pin: my_pin {
-            gpios = <&gpio1 40 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+            /* no internal pull up */
+            gpios = <&gpio0 10 (GPIO_ACTIVE_LOW)>;
         };
         wakeup-source;
     };
 
     transform: transform {
         compatible = "zmk,matrix-transform";
-        rows = <5>;
-        columns = <15>;
+        rows = <2>;
+        columns = <4>;
 
         map = <
-        RC(0,0) RC(0,1) RC(0,2) RC(0,3) RC(0,4) RC(0,5) RC(0,6) RC(0,7) RC(0,8) RC(0,9) RC(0,10) RC(0,11) RC(0,12)
-        RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4) RC(1,5) RC(1,6) RC(1,7) RC(1,8) RC(1,9) RC(1,10) RC(1,11) RC(1,12) RC(1,13)
-        RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5) RC(2,6) RC(2,7) RC(2,8) RC(2,9) RC(2,10) RC(2,11) RC(2,12)
-        RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4) RC(3,5) RC(3,6) RC(3,7) RC(3,8) RC(3,9) RC(3,10)          RC(3,12) RC(3,13)
-        RC(4,0) RC(4,1) RC(4,2)         RC(4,4)                         RC(4,8)      
+        RC(0,2) RC(0,3) RC(0,1) RC(0,0)
+        RC(1,2) RC(1,3) RC(1,1) RC(1,0)    
         >;
     };
 };
@@ -176,16 +167,16 @@ zephyr_udc0: &usbd {
 &adc {
     // Battery Sensing
     channel@3 {
-        zephyr,input-positive = <NRF_SAADC_AIN3>; /* P0.05 */
+        zephyr,input-positive = <NRF_SAADC_AIN0>; /* P0.05 */
     };
 
     // EC Read
     channel@1 {
-        zephyr,input-positive = <NRF_SAADC_AIN4>; /* P0.28 */
+        zephyr,input-positive = <NRF_SAADC_AIN7>; /* P0.28 */
     };
 };
 
-/* enable gpio port */
+/* enable gpio port to fix undefined reference issue */
 &gpiote {
 	status = "okay";
 };

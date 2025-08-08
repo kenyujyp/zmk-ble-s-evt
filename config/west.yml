@@ -12,7 +12,7 @@ manifest:
       remote: zmkfirmware
       revision: main
       import: app/west.yml
-    - name: zmk-gpio-ec
+    - name: ec-d-ble-evt-1mux
       remote: kenyujy
       revision: main
     - name: zmk-shell-cmd
