@@ -15,9 +15,9 @@ manifest:
     - name: ec-d-ble-evt-1mux
       remote: kenyujy
       revision: main
-    - name: zmk-shell-cmd
-      remote: kenyujy
-      revision: main
+    #- name: zmk-shell-cmd
+    #  remote: kenyujy
+    #  revision: main
   self:
     path: config
 

@@ -46,3 +46,7 @@ CONFIG_SHELL=y
 CONFIG_SHELL_TAB=y
 # enable print functions
 CONFIG_PRINTK=y
+
+# enable I2C
+CONFIG_I2C=y  
+CONFIG_I2C_NRFX=y

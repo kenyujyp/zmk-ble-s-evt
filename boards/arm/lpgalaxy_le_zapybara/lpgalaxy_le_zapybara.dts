@@ -54,10 +54,10 @@
         /* need to be careful with kscan compatible type, defined by driver */
 		compatible = "zmk,kscan-gpio-ec";
 
-		matrix-relax-us = <800>;
+		matrix-relax-us = <80>;
         matrix-warm-up-ms = <5>;
-        active-polling-interval-ms = <10>;
-        idle-polling-interval-ms = <35>;
+        active-polling-interval-ms = <1000>;   // 1s interval
+        idle-polling-interval-ms = <3500>;     // 3.5s 
 
         io-channels = <&adc 1>;
         
@@ -65,7 +65,7 @@
         //power-gpios = <&gpio1 13 (GPIO_ACTIVE_HIGH)>;
 
 		// 2 multiplexer enable pins in col number ascending order
-        mux0-en-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+        mux0-en-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
 
         /* mux channel select gpios, in ascending order */
         mux-sel-gpios
@@ -134,10 +134,87 @@ zephyr_udc0: &usbd {
 };
 
 &flash0 {
-	/*
-	 * For more information, see:
-	 * http://docs.zephyrproject.org/latest/devices/dts/flash_partitions.html
-	 */
+    partitions {
+        compatible = "fixed-partitions";
+        #address-cells = <1>;
+        #size-cells = <1>;
+
+        sd_partition: partition@0 {
+            label = "softdevice";
+            reg = <0x00000000 0x00026000>;
+        };
+
+        code_partition: partition@26000 {
+            label = "code_partition";
+            reg = <0x00026000 0x00046000>;
+        };
+        // The flash starting at 0x0006c000 and ending at
+        // 0x00073fff is reserved for use by the application.
+        // Storage partition will be used by FCB/LittleFS/NVS if enabled.
+        storage_partition: partition@6c000 {
+            label = "storage";
+            reg = <0x0006c000 0x00008000>;
+        };
+
+        boot_partition: partition@74000 {
+            label = "adafruit_boot";
+            reg = <0x00074000 0x0000c000>;
+        };
+    };
+};
+
+
+
+&adc {
+    // Battery Sensing
+    channel@3 {
+        zephyr,input-positive = <NRF_SAADC_AIN0>; /* P0.05 */
+    };
+
+    // EC Read
+    channel@1 {
+        zephyr,input-positive = <NRF_SAADC_AIN7>; /* P0.28 */
+    };
+};
+
+/* set up I2C gpio pins */
+&i2c0 {
+    status = "okay";
+    compatible = "nordic,nrf-twim";
+	pinctrl-0 = <&i2c0_default>;
+    pinctrl-names = "default";
+	clock-frequency = <100000>;
+    zaat_sensor: zaat@53 {           // device node
+        compatible = "zmk,adxl345";  // Must match driver
+        reg = <0x53>;                // I2C address
+    };
+};
+
+/* disable I2C internal pull up resistor */
+&pinctrl {
+    i2c0_default: i2c0_default {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 0, 30)>,
+                    <NRF_PSEL(TWIM_SCL, 0, 31)>;
+        };
+    };
+};
+
+/* enable gpio port to fix undefined reference issue */
+&gpiote {
+	status = "okay";
+};
+/* enable gpio port 0 */
+&gpio0 {
+	status = "okay";
+};
+/* enable gpio port 1 */
+&gpio1 {
+	status = "okay";
+};
+
+/*
+&flash0 {
 	partitions {
 		compatible = "fixed-partitions";
 		#address-cells = <1>;
@@ -164,27 +241,4 @@ zephyr_udc0: &usbd {
 	};
 };
 
-&adc {
-    // Battery Sensing
-    channel@3 {
-        zephyr,input-positive = <NRF_SAADC_AIN0>; /* P0.05 */
-    };
-
-    // EC Read
-    channel@1 {
-        zephyr,input-positive = <NRF_SAADC_AIN7>; /* P0.28 */
-    };
-};
-
-/* enable gpio port to fix undefined reference issue */
-&gpiote {
-	status = "okay";
-};
-/* enable gpio port 0 */
-&gpio0 {
-	status = "okay";
-};
-/* enable gpio port 1 */
-&gpio1 {
-	status = "okay";
-};
+*/
