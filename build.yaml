@@ -15,4 +15,4 @@
 ---
 include:
   - board: lpgalaxy_le_zapybara
-    #snippet: zmk-usb-logging
+    snippet: zmk-usb-logging
