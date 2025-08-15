@@ -5,4 +5,4 @@ include(${ZEPHYR_BASE}/boards/common/uf2.board.cmake)
 include(${ZEPHYR_BASE}/boards/common/jlink.board.cmake)
 
 
-zephyr_library_sources(${CMAKE_CURRENT_SOURCE_DIR}/board.c)
+#zephyr_library_sources(${CMAKE_CURRENT_SOURCE_DIR}/board.c)
