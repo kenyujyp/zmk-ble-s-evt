@@ -213,6 +213,11 @@ zephyr_udc0: &usbd {
 	status = "okay";
 };
 
+&power {
+    dcdcen0 = <1>; // Enable DC-DC
+    regout0-voltage = <3>; // 3 = 3.3V (check Zephyr headers)
+};
+
 /*
 &flash0 {
 	partitions {
