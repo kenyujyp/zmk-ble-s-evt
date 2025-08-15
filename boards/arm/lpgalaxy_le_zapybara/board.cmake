@@ -5,7 +5,4 @@ include(${ZEPHYR_BASE}/boards/common/uf2.board.cmake)
 include(${ZEPHYR_BASE}/boards/common/jlink.board.cmake)
 
 
-if (CONFIG_BOARD_LPGALAXY_LE_ZAPYBARA)
-    zephyr_library()
-    target_sources(app PRIVATE PRIVATE board.c)
-endif()
+zephyr_library_sources(${CMAKE_CURRENT_SOURCE_DIR}/board.c)
