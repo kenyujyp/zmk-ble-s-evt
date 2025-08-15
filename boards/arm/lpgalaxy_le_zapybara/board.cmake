@@ -6,5 +6,5 @@ include(${ZEPHYR_BASE}/boards/common/jlink.board.cmake)
 
 if(CONFIG_BOARD_LPGALAXY_LE_ZAPYBARA)
     zephyr_library()
-    zephyr_library_sources_ifdef(CONFIG_BOARD_ENABLE_DCDC board.c)
+    zephyr_library_sources(board.c)
 endif()
