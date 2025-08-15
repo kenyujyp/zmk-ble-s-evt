@@ -47,7 +47,7 @@
         zephyr,sram = &sram0;
         zephyr,flash = &flash0;
 	    zerhyr,shell-uart = &cdc_acm_uart;
-        zmk,battery = &vbatt; 
+        zmk,battery = &vbatt;
     };
 
     matrix: matrix {
@@ -134,6 +134,10 @@ zephyr_udc0: &usbd {
 };
 
 &flash0 {
+    /*
+     * For more information, see:
+     * http://docs.zephyrproject.org/latest/devices/dts/flash_partitions.html
+     */
     partitions {
         compatible = "fixed-partitions";
         #address-cells = <1>;
@@ -143,22 +147,28 @@ zephyr_udc0: &usbd {
             label = "softdevice";
             reg = <0x00000000 0x00026000>;
         };
-
         code_partition: partition@26000 {
             label = "code_partition";
-            reg = <0x00026000 0x00046000>;
-        };
-        // The flash starting at 0x0006c000 and ending at
-        // 0x00073fff is reserved for use by the application.
-        // Storage partition will be used by FCB/LittleFS/NVS if enabled.
-        storage_partition: partition@6c000 {
-            label = "storage";
-            reg = <0x0006c000 0x00008000>;
+            reg = <0x00026000 0x000c6000>;
         };
 
-        boot_partition: partition@74000 {
+        /*
+         * The flash starting at 0x000ec000 and ending at
+         * 0x000f3fff is reserved for use by the application.
+         */
+
+        /*
+         * Storage partition will be used by FCB/LittleFS/NVS
+         * if enabled.
+         */
+        storage_partition: partition@ec000 {
+            label = "storage";
+            reg = <0x000ec000 0x00008000>;
+        };
+
+        boot_partition: partition@f4000 {
             label = "adafruit_boot";
-            reg = <0x00074000 0x0000c000>;
+            reg = <0x000f4000 0x0000c000>;
         };
     };
 };
