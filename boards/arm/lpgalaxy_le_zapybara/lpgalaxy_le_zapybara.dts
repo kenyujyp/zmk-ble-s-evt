@@ -62,7 +62,7 @@
         io-channels = <&adc 1>;
         
         // active state means active is 1, inactive is 0
-        discharge-gpios = <&gpio0 2 (GPIO_ACTIVE_HIGH | NRF_GPIO_DRIVE_H0H1)>;
+        discharge-gpios = <&gpio0 30 (GPIO_ACTIVE_HIGH | NRF_GPIO_DRIVE_H0H1)>;
         //power-gpios = <&gpio1 13 (GPIO_ACTIVE_HIGH)>;
 
 		// 2 multiplexer enable pins in col number ascending order
