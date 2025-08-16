@@ -56,8 +56,8 @@
 
 		matrix-relax-us = <80>;
         matrix-warm-up-ms = <5>;
-        active-polling-interval-ms = <30>;   // 30ms interval
-        idle-polling-interval-ms = <50>;     // 50ms
+        active-polling-interval-ms = <3000>;   // 30ms interval
+        idle-polling-interval-ms = <5000>;     // 50ms
 
         io-channels = <&adc 1>;
         
@@ -205,8 +205,8 @@ zephyr_udc0: &usbd {
 &pinctrl {
     i2c0_default: i2c0_default {
         group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 0, 30)>,
-                    <NRF_PSEL(TWIM_SCL, 0, 31)>;
+            psels = <NRF_PSEL(TWIM_SDA, 0, 24)>,
+                    <NRF_PSEL(TWIM_SCL, 0, 13)>;
         };
     };
 };
