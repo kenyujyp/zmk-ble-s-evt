@@ -61,6 +61,7 @@
 
         io-channels = <&adc 1>;
         
+        // active state means active is 1, inactive is 0
         discharge-gpios = <&gpio0 2 (GPIO_ACTIVE_HIGH | NRF_GPIO_DRIVE_H0H1)>;
         //power-gpios = <&gpio1 13 (GPIO_ACTIVE_HIGH)>;
 
@@ -221,6 +222,12 @@ zephyr_udc0: &usbd {
 /* enable gpio port 1 */
 &gpio1 {
 	status = "okay";
+};
+
+
+&power {
+    dcdcen0 = <1>; // Enable DC-DC
+    regout0-voltage = <3>; // 3 = 3.3V (check Zephyr headers)
 };
 
 /*
