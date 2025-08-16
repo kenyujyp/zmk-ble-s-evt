@@ -59,5 +59,5 @@ CONFIG_I2C_NRFX=y
 CONFIG_BOARD_ENABLE_DCDC=y
 
 # Set voltage to 3.3V (only needed if voltage is incorrect)
-#EXT POWER
+##EXT POWER
 #CONFIG_ZMK_EXT_POWER=y
