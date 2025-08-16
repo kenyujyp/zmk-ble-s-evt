@@ -57,3 +57,7 @@ CONFIG_I2C_NRFX=y
 
 # Enable DC-DC converter
 CONFIG_BOARD_ENABLE_DCDC=y
+
+# Set voltage to 3.3V (only needed if voltage is incorrect)
+CONFIG_NRF_REGULATOR_CUSTOM_VOLTAGE=y
+CONFIG_NRF_REGULATOR_VOLTAGE_VDDH=3300
