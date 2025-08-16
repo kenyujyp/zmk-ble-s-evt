@@ -65,7 +65,7 @@
         //power-gpios = <&gpio1 13 (GPIO_ACTIVE_HIGH)>;
 
 		// 2 multiplexer enable pins in col number ascending order
-        mux0-en-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+        mux0-en-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
 
         /* mux channel select gpios, in ascending order */
         mux-sel-gpios
