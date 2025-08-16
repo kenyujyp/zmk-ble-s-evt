@@ -56,8 +56,8 @@
 
 		matrix-relax-us = <80>;
         matrix-warm-up-ms = <5>;
-        active-polling-interval-ms = <1000>;   // 1s interval
-        idle-polling-interval-ms = <3500>;     // 3.5s 
+        active-polling-interval-ms = <30>;   // 30ms interval
+        idle-polling-interval-ms = <50>;     // 50ms
 
         io-channels = <&adc 1>;
         
@@ -184,7 +184,7 @@ zephyr_udc0: &usbd {
 
     // EC Read
     channel@1 {
-        zephyr,input-positive = <NRF_SAADC_AIN7>; /* P0.28 */
+        zephyr,input-positive = <NRF_SAADC_AIN7>; /* P0.31 */
     };
 };
 
